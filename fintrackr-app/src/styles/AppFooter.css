@@ -1,0 +1,26 @@
+/* src/styles/Footer.css */
+
+/* src/styles/AppFooter.css */
+
+.app-footer {
+  text-align: center;
+  padding: var(--spacing-md);
+  background-color: var(--color-card-bg);
+  box-shadow: 0 -2px 6px rgba(0,0,0,0.05);
+  margin-top: auto;
+  font-size: 0.9rem;
+  color: var(--color-text-light);
+  font-family: var(--font-primary);
+}
+
+.app-footer a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.app-footer a:hover {
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+}

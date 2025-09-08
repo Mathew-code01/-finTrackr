@@ -1,0 +1,316 @@
+/* src/styles/TransactionList.css */
+
+/* src/styles/TransactionList.css */
+/* src/styles/TransactionList.css */
+
+/* src/styles/TransactionList.css */
+
+/* --- Container --- */
+.transaction-list {
+  background-color: var(--color-card-bg);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  overflow-x: hidden; /* no horizontal scroll */
+}
+
+/* Header */
+.transaction-list h3 {
+  margin-bottom: var(--spacing-md);
+  font-size: clamp(1rem, 2vw, 1.4rem); /* responsive font */
+  color: var(--color-text);
+}
+
+/* --- Table --- */
+.transaction-list table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+  /* removed min-width to avoid scroll */
+}
+
+.transaction-list th,
+.transaction-list td {
+  padding: var(--spacing-sm);
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.transaction-list th {
+  font-weight: 600;
+  color: var(--color-text-light);
+}
+
+.transaction-list td.income {
+  color: var(--color-success);
+  font-weight: 500;
+}
+
+.transaction-list td.expense {
+  color: var(--color-danger);
+  font-weight: 500;
+}
+
+.transaction-list tr:hover {
+  background-color: rgba(30, 136, 229, 0.05);
+  transition: background 0.2s ease;
+}
+
+/* --- Responsive Table (Cards on Mobile) --- */
+@media (max-width: 768px) {
+  .transaction-list table,
+  .transaction-list thead,
+  .transaction-list tbody,
+  .transaction-list th,
+  .transaction-list td,
+  .transaction-list tr {
+    display: block;
+    width: 100%;
+  }
+
+  .transaction-list thead {
+    display: none;
+  }
+
+  .transaction-list tr {
+    background: var(--color-card-bg);
+    margin-bottom: var(--spacing-md);
+    border-radius: var(--radius-md);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    padding: var(--spacing-sm);
+  }
+
+  .transaction-list td {
+    position: relative;
+    padding-left: 42%; /* tighter for smaller screens */
+    border-bottom: none;
+    margin-bottom: var(--spacing-xs);
+    word-wrap: break-word;
+    white-space: normal; /* allow wrapping */
+  }
+
+  .transaction-list td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: var(--spacing-sm);
+    font-weight: 600;
+    color: var(--color-text-light);
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+}
+
+/* --- Extra Small Screens (≤480px) --- */
+@media (max-width: 480px) {
+  .transaction-list td {
+    padding-left: 38%; /* even smaller label offset */
+    font-size: 0.85rem;
+  }
+
+  .transaction-list td::before {
+    font-size: 0.8rem;
+    white-space: normal; /* labels can wrap */
+    width: 35%;
+  }
+
+  .list-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+
+  .search-box input {
+    min-width: 80px;
+  }
+
+  .category-badge {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
+  }
+}
+
+/* --- Action Buttons --- */
+.edit-btn,
+.delete-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  margin: 0 0.2rem;
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
+}
+
+.edit-btn:hover {
+  color: var(--color-primary);
+  transform: scale(1.2);
+}
+
+.delete-btn {
+  color: var(--color-danger);
+}
+
+.delete-btn:hover {
+  color: #b71c1c;
+  transform: scale(1.2);
+}
+
+/* --- Category Badges --- */
+.category-badge {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.category-badge.Food { background: #fff3e0; color: #ef6c00; }
+.category-badge.Rent { background: #f3e5f5; color: #6a1b9a; }
+.category-badge.Transport { background: #e1f5fe; color: #0277bd; }
+.category-badge.Entertainment { background: #fce4ec; color: #ad1457; }
+.category-badge.Salary { background: #e8f5e9; color: #2e7d32; }
+.category-badge.Investment { background: #ede7f6; color: #5e35b1; }
+
+/* --- Header + Filters --- */
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin-bottom: 0.8rem;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  background: #f1f3f4;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  background: transparent;
+  margin-left: 0.3rem;
+  font-size: 0.9rem;
+  min-width: 100px;
+}
+
+/* --- Large Screens --- */
+@media (min-width: 1200px) {
+  /* .transaction-list {
+    max-width: 90%;
+    margin: 0 auto;
+  } */
+
+  .transaction-list table {
+    font-size: 1rem;
+  }
+}
+
+/* Small screens ≤700px */
+@media (max-width: 700px) {
+  .transaction-list {
+    padding: var(--spacing-md);
+  }
+
+  .transaction-list td {
+    padding-left: 40%; /* space for label */
+    font-size: 0.9rem;
+  }
+
+  .transaction-list td::before {
+    font-size: 0.85rem;
+    width: 35%;
+    white-space: normal;
+  }
+
+  .list-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .filters {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .search-box {
+    flex: 1;
+    max-width: 100%;
+  }
+
+  .search-box input {
+    width: 100%;
+    min-width: unset;
+  }
+}
+
+/* Extra small ≤480px → tighter */
+@media (max-width: 480px) {
+  .transaction-list td {
+    padding-left: 36%;
+    font-size: 0.8rem;
+  }
+
+  .transaction-list td::before {
+    font-size: 0.75rem;
+  }
+
+  .category-badge {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
+  }
+
+  .edit-btn, .delete-btn {
+    font-size: 1rem;
+  }
+}
+
+/* --- Actions compact for extra small screens --- */
+@media (max-width: 480px) {
+  .transaction-list td[data-label="Actions"] {
+    display: flex;
+    justify-content: flex-start;
+    gap: 0.6rem;
+    padding-left: 36%; /* keeps label aligned */
+  }
+
+  .edit-btn,
+  .delete-btn {
+    font-size: 0.9rem;
+    padding: 0.4rem;
+    border-radius: 50%;
+    background: #f5f5f5; /* subtle background to enlarge tap area */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+  }
+
+  .edit-btn:hover {
+    background: rgba(30, 136, 229, 0.15);
+    color: var(--color-primary);
+    transform: none; /* don’t zoom icons on mobile */
+  }
+
+  .delete-btn:hover {
+    background: rgba(244, 67, 54, 0.1);
+    color: #b71c1c;
+    transform: none;
+  }
+}

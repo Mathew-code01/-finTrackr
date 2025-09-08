@@ -1,0 +1,183 @@
+/* src/styles/ExportData.css */
+/* src/styles/ExportData.css */
+.export-data {
+  background: var(--color-card-bg, #fff);
+  padding: var(--spacing-lg, 1rem);
+  border-radius: var(--radius-md, 8px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  margin-top: 1rem;
+  text-align: center;
+}
+
+/* Buttons */
+.export-data button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  background: var(--color-primary, #1e88e5);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.export-data button:hover {
+  background: var(--color-primary-dark, #1565c0);
+}
+
+.export-info {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--color-text-light);
+}
+
+.export-buttons {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  margin-top: 0.8rem;
+}
+
+/* Import button */
+.import-btn {
+  background: var(--color-success, #43a047);
+}
+
+.import-btn:hover {
+  opacity: 0.9;
+}
+
+/* ✅ Status messages */
+.export-status {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  display: inline-block;
+  max-width: 90%;
+}
+
+/* Success */
+.export-status.success {
+  color: var(--color-success);
+  background: rgba(76, 175, 80, 0.1);
+}
+
+/* Warning */
+.export-status.warning {
+  color: #ff9800;
+  background: rgba(255, 152, 0, 0.15);
+}
+
+/* Error */
+.export-status.error {
+  color: var(--color-danger);
+  background: rgba(244, 67, 54, 0.12);
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+/* Modal Box */
+.modal {
+  background: var(--color-card-bg, #fff);
+  padding: 1.5rem;
+  border-radius: var(--radius-lg, 10px);
+  width: 320px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.modal h3 {
+  margin-bottom: 0.5rem;
+}
+
+.modal p {
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+/* Modal Buttons */
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.modal-buttons button {
+  flex: 1;
+  padding: 0.6rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.replace-btn {
+  background: #e53935;
+}
+
+.merge-btn {
+  background: #43a047;
+}
+
+.cancel-btn {
+  background: #757575;
+}
+
+/* ✅ Status messages */
+.export-status {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  display: inline-block;
+  max-width: 90%;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/* Success */
+.export-status.success {
+  color: var(--color-success);
+  background: rgba(76, 175, 80, 0.1);
+}
+
+/* Warning */
+.export-status.warning {
+  color: #ff9800;
+  background: rgba(255, 152, 0, 0.15);
+}
+
+/* Error */
+.export-status.error {
+  color: var(--color-danger);
+  background: rgba(244, 67, 54, 0.12);
+}
+
+/* ✅ Fade-out animation */
+.export-status.fade-out {
+  opacity: 0;
+  transform: translateY(-6px);
+}

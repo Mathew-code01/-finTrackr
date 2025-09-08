@@ -1,0 +1,73 @@
+/* TransactionsPage.css */
+
+.transactions-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--color-bg-light);
+}
+
+.transactions-page h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Timeframe filter section */
+.timeframe-filter {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+.timeframe-filter label {
+  font-weight: 500;
+  color: var(--color-text-light);
+}
+
+.timeframe-filter select {
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #ddd;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.timeframe-filter select:hover {
+  border-color: var(--color-primary);
+}
+
+.app-content {
+  flex: 1;
+  padding: var(--spacing-lg);
+  overflow-y: auto;
+  background: var(--color-bg-light);
+  border-left: 1px solid #eee;
+}
+
+/* Make page responsive */
+@media (max-width: 768px) {
+  .transactions-page h1 {
+    font-size: 1.5rem;
+  }
+
+  .timeframe-filter {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+
+  .app-content {
+    padding: var(--spacing-md);
+  }
+}
+
+/* Make page responsive */
+@media (min-width: 769px) {
+    .app-content {
+  margin-left: 250px;
+}
+}

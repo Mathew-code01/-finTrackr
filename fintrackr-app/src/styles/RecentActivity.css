@@ -1,0 +1,18 @@
+/* src/styles/RecentActivity.css */
+.recent-activity ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.recent-activity li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #eee;
+}
+.recent-activity li.income {
+  color: green;
+}
+.recent-activity li.expense {
+  color: red;
+}

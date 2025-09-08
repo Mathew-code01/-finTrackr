@@ -1,0 +1,13 @@
+/* src/styles/PublicFooter.css */
+
+/* src/styles/PublicFooter.css */
+
+.public-footer {
+  text-align: center;
+  padding: var(--spacing-md);
+  background: var(--color-secondary);
+  color: var(--color-text-light);
+  margin-top: var(--spacing-xl);
+  font-size: 0.9rem;
+  font-family: var(--font-primary);
+}

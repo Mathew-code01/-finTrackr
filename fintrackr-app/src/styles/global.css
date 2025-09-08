@@ -1,0 +1,43 @@
+/* src/styles/global.css */
+
+/* CSS Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Apply global font & background */
+body {
+  font-family: var(--font-main);
+  background: var(--white);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+/* Links */
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Buttons */
+button {
+  cursor: pointer;
+  font-family: var(--font-main);
+}
+
+/* Utility classes */
+.text-center {
+  text-align: center;
+}
+.mt-md {
+  margin-top: var(--space-md);
+}
+.mt-lg {
+  margin-top: var(--space-lg);
+}

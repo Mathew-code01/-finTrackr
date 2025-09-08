@@ -1,0 +1,130 @@
+/* src/styles/UpcomingBills.css */
+.upcoming-bills {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.upcoming-bills h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+/* Bill Form */
+.bill-form {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.bill-form input[type="text"],
+.bill-form input[type="number"],
+.bill-form input[type="date"] {
+  flex: 1 1 120px;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.bill-form button {
+  padding: 0.5rem 1rem;
+  background: var(--primary-color, #1e88e5);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.bill-form button:hover {
+  background: #1565c0;
+}
+
+/* Bill List */
+.upcoming-bills ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.upcoming-bills li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  background: #f9f9f9;
+  transition: background 0.3s, transform 0.3s, opacity 0.3s;
+  gap: 0.5rem;
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: fadeIn 0.4s forwards;
+}
+
+.upcoming-bills li.due-soon {
+  border-left: 4px solid #ff9800;
+  background: #fff7e6;
+}
+
+/* Animate new bills */
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Bill Text */
+.upcoming-bills li span {
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.upcoming-bills li small {
+  font-size: 0.8rem;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Calendar icon before due date */
+.upcoming-bills li small::before {
+  content: "📅";
+}
+
+/* Delete Button */
+.delete-bill-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #f44336;
+  transition: transform 0.2s;
+}
+
+.delete-bill-btn:hover {
+  transform: scale(1.2);
+}
+
+.upcoming-bills li small {
+  font-size: 0.8rem;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Remove the emoji */
+.upcoming-bills li small::before {
+  content: none;
+}
