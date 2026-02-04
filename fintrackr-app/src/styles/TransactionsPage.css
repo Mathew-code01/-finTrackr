@@ -1,73 +1,131 @@
 /* TransactionsPage.css */
 
-.transactions-page {
+/* src/styles/TransactionsPage.css */
+
+/* --- 1. PAGE LAYOUT --- */
+/* src/styles/TransactionsPage.css */
+
+.fintrack-tx-vault-root {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: 100vh;
+  background-color: var(--bg-pure-white);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fintrack-tx-vault-main {
+  grid-column: 2;
+  width: 100%;
+}
+
+.fintrack-tx-vault-container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+/* --- Section 1: Hero (White) --- */
+.fintrack-tx-vault-hero {
+  background: var(--bg-pure-white);
+  padding: var(--space-xl) 0; /* Strict vertical rhythm */
+  border-bottom: var(--border-light);
+}
+
+.fintrack-tx-vault-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.fintrack-tx-vault-title-group {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  background: var(--color-bg-light);
+  gap: var(--space-sm);
 }
 
-.transactions-page h1 {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: var(--color-text);
-  margin-bottom: var(--spacing-md);
+.fintrack-tx-vault-icon {
+  color: var(--color-accent);
+  font-size: 1.5rem;
 }
 
-/* Timeframe filter section */
-.timeframe-filter {
+.fintrack-tx-vault-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+/* Filter Pill Styling */
+.fintrack-tx-vault-filter-pill {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-lg);
+  gap: var(--space-sm);
+  background: var(--bg-soft-gray);
+  padding: 6px 16px;
+  border-radius: 50px;
+  border: var(--border-light);
+  color: var(--text-muted);
 }
 
-.timeframe-filter label {
-  font-weight: 500;
-  color: var(--color-text-light);
+.fintrack-tx-vault-filter-pill label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.timeframe-filter select {
-  padding: 6px 12px;
-  border-radius: var(--radius-sm);
-  border: 1px solid #ddd;
-  font-size: 0.95rem;
+.fintrack-tx-vault-filter-pill select {
+  background: transparent;
+  border: none;
+  font-family: var(--font-primary);
+  font-weight: 600;
+  color: var(--text-main);
   cursor: pointer;
-  transition: border-color 0.2s ease;
+  outline: none;
+  font-size: 0.85rem;
 }
 
-.timeframe-filter select:hover {
-  border-color: var(--color-primary);
+/* --- Section 2: Content (Zebra Tint) --- */
+.fintrack-tx-vault-content-section {
+  background: var(--bg-soft-gray);
+  padding: var(--space-xl) 0; /* Matches Hero Padding */
+  min-height: 60vh;
 }
 
-.app-content {
-  flex: 1;
-  padding: var(--spacing-lg);
-  overflow-y: auto;
-  background: var(--color-bg-light);
-  border-left: 1px solid #eee;
+.fintrack-tx-vault-ledger-wrapper {
+  background: var(--bg-pure-white);
+  border-radius: var(--radius-pro);
+  border: var(--border-light);
+  box-shadow: var(--shadow-soft);
+  padding: var(--space-md);
+  /* Ensures table doesn't feel cramped */
 }
 
-/* Make page responsive */
-@media (max-width: 768px) {
-  .transactions-page h1 {
-    font-size: 1.5rem;
+/* --- Responsive Adaptations --- */
+@media (max-width: 1024px) {
+  .fintrack-tx-vault-root {
+    grid-template-columns: 1fr;
+  }
+  
+  .fintrack-tx-vault-main {
+    grid-column: 1;
   }
 
-  .timeframe-filter {
+  .fintrack-tx-vault-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--spacing-xs);
+    gap: var(--space-lg);
   }
 
-  .app-content {
-    padding: var(--spacing-md);
+  .fintrack-tx-vault-title {
+    font-size: 1.75rem;
   }
 }
 
-/* Make page responsive */
-@media (min-width: 769px) {
-    .app-content {
-  margin-left: 250px;
-}
+.fintrack-tx-vault-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.2);
+  backdrop-filter: blur(4px);
+  z-index: 998;
 }

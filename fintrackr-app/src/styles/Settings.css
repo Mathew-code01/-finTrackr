@@ -1,189 +1,315 @@
 /* src/styles/Settings.css */
-make use of the variables css and give me the full css
-
-/* src/styles/variables.css */
-
-:root {
-  /* Brand Colors */
-  --color-primary: #1e88e5;
-  --color-primary-dark: #1565c0;
-  --color-secondary: #f5f5f5;
-  --color-card-bg: #ffffff;
-  --color-bg-light: #f5f6fa;
-  --color-text: #333333;
-  --color-text-light: #666666;
-  --color-success: #4caf50;
-  --color-danger: #f44336;
-  --white: #ffffff;
-
-  /* Fonts */
-  --font-primary: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-
-  /* Spacing */
-  --spacing-xs: 4px;
-  --spacing-sm: 8px;
-  --spacing-md: 16px;
-  --spacing-lg: 24px;
-  --spacing-xl: 40px;
-
-  /* Borders */
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 12px;
+/* ---------- 1. Core Layout Structure ---------- */
+.fintrack-settings-v2-root {
+  display: grid;
+  /* Fixed sidebar space on desktop (280px), rest is flexible */
+  grid-template-columns: 280px 1fr;
+  min-height: 100vh;
+  background-color: var(--bg-soft-gray);
+  font-family: var(--font-primary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-/* src/styles/Settings.css */
 
-.settings-page-container {
+.fintrack-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(4px);
+  z-index: 998;
+}
+
+/* ---------- 2. Main Content Area ---------- */
+.fintrack-settings-v2-main {
+  grid-column: 2;
+  padding: var(--space-xl) var(--space-lg);
+  max-width: var(--container-max-width);
+  width: 100%;
+  margin: 0 auto;
+}
+
+.fintrack-settings-v2-hero {
+  margin-bottom: var(--space-xl);
+  text-align: left; /* Aligns with agency dashboard aesthetic */
+}
+
+.fintrack-settings-v2-title {
+  font-size: clamp(1.8rem, 4vw, 2.25rem);
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: var(--letter-spacing-tight);
+  margin-bottom: var(--space-xs);
+}
+
+.fintrack-settings-v2-subtitle {
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+/* ---------- 3. Settings Grid ---------- */
+.fintrack-settings-v2-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: var(--space-lg);
+  width: 100%;
+}
+
+/* ---------- 4. Settings Card ---------- */
+.fintrack-settings-v2-card {
+  background: var(--bg-pure-white);
+  border: var(--border-light);
+  border-radius: var(--radius-pro);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-soft);
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  gap: var(--space-lg);
 }
 
-.settings-page-main {
-  flex: 1;
-  padding: 2rem;
-  background: var(--color-background);
+.fintrack-settings-v2-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding-bottom: var(--space-sm);
+  border-bottom: var(--border-light);
 }
 
-.settings-banner {
-  margin-bottom: 2rem;
+.fintrack-settings-v2-header-icon {
+  color: var(--color-accent);
+  font-size: 1.2rem;
 }
 
-.settings-layout {
-  display: grid;
-  gap: 2rem;
+.fintrack-settings-v2-card-header h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
 }
 
-.settings-card {
-  background: var(--color-card-bg);
-  padding: 1.5rem;
-  border-radius: var(--radius-md);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.settings-card h2 {
-  margin-bottom: 1rem;
-}
-
-.settings-option {
+/* ---------- 5. Settings Row & Toggle ---------- */
+.fintrack-settings-v2-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
 }
 
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 24px;
+.fintrack-settings-v2-info {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  color: var(--text-muted);
 }
 
-.switch input {
-  display: none;
+.fintrack-settings-v2-info svg {
+  font-size: 1.2rem;
+  margin-top: 4px;
 }
 
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0; left: 0;
-  right: 0; bottom: 0;
-  background-color: #ccc;
-  border-radius: 24px;
-  transition: 0.3s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 18px; width: 18px;
-  left: 3px; bottom: 3px;
-  background-color: white;
-  border-radius: 50%;
-  transition: 0.3s;
-}
-
-input:checked + .slider {
-  background-color: var(--color-primary);
-}
-
-input:checked + .slider:before {
-  transform: translateX(26px);
-}
-
-/* Danger Zone */
-.danger-zone {
-  border: 1px solid var(--color-danger);
-}
-
-.clear-btn, .logout-btn {
-  width: 100%;
-  margin-top: 0.75rem;
-  padding: 0.75rem;
-  border: none;
-  border-radius: var(--radius-sm);
+.fintrack-settings-v2-text label {
+  display: block;
   font-weight: 600;
-  cursor: pointer;
+  color: var(--text-main);
+  font-size: 0.95rem;
 }
 
-.clear-btn {
+.fintrack-settings-v2-text span {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  max-width: 250px;
+}
+
+/* High-End Toggle Switch */
+.fintrack-settings-v2-switch {
+  width: 44px;
+  height: 24px;
+  background: #e2e8f0;
+  border-radius: 20px;
+  position: relative;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  flex-shrink: 0;
+}
+
+.fintrack-settings-v2-switch.active {
+  background: var(--color-accent);
+}
+
+.fintrack-settings-v2-toggle-knob {
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.fintrack-settings-v2-switch.active .fintrack-settings-v2-toggle-knob {
+  transform: translateX(20px);
+}
+
+/* ---------- 6. Danger Zone & Buttons ---------- */
+.fintrack-settings-v2-divider {
+  height: 1px;
+  background: rgba(15, 23, 42, 0.05);
+  margin: var(--space-sm) 0;
+}
+
+.fintrack-settings-v2-danger-zone p {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-danger);
+  margin-bottom: var(--space-md);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.fintrack-settings-v2-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.fintrack-settings-v2-btn-clear,
+.fintrack-settings-v2-btn-logout {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--radius-pro);
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fintrack-settings-v2-btn-clear {
+  background: #fff1f2;
+  border: 1px solid #fee2e2;
+  color: var(--color-danger);
+}
+
+.fintrack-settings-v2-btn-clear:hover {
   background: var(--color-danger);
   color: white;
 }
 
-.logout-btn {
-  background: var(--color-accent);
+.fintrack-settings-v2-btn-logout {
+  background: var(--bg-soft-gray);
+  border: var(--border-light);
+  color: var(--text-main);
+}
+
+.fintrack-settings-v2-btn-logout:hover {
+  background: var(--bg-deep-obsidian);
   color: white;
 }
 
-@media (min-width: 769px) {
-    .settings-page-main {
-  margin-left: 250px;
-}
-}
-
-.confirm-overlay {
+/* ---------- 7. High-End Modal ---------- */
+.fintrack-settings-v2-modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0,0,0,0.6);
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(8px);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 999;
+  justify-content: center;
+  z-index: 2000;
+  padding: var(--space-md);
 }
 
-.confirm-box {
-  background: var(--color-card-bg);
-  padding: 2rem;
-  border-radius: var(--radius-md);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  max-width: 400px;
+.fintrack-settings-v2-modal {
+  background: var(--bg-pure-white);
+  padding: var(--space-xl) var(--space-lg);
+  border-radius: var(--radius-pro);
+  max-width: 450px;
+  width: 100%;
   text-align: center;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+  animation: modalScale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.confirm-actions {
-  margin-top: 1.5rem;
+.fintrack-settings-v2-modal-icon {
+  width: 60px;
+  height: 60px;
+  background: #fff1f2;
+  color: var(--color-danger);
+  border-radius: 50%;
   display: flex;
-  justify-content: space-around;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin: 0 auto var(--space-md);
 }
 
-.yes-btn {
-  background: #e74c3c;
-  color: #fff;
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
+.fintrack-settings-v2-modal h3 {
+  font-size: 1.25rem;
+  margin-bottom: var(--space-sm);
+  color: var(--text-main);
 }
 
-.no-btn {
-  background: #bdc3c7;
-  color: #000;
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: var(--radius-sm);
+.fintrack-settings-v2-modal p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: var(--space-lg);
+}
+
+.fintrack-settings-v2-modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}
+
+.fintrack-settings-v2-modal-cancel,
+.fintrack-settings-v2-modal-confirm {
+  padding: 14px;
+  border-radius: var(--radius-pro);
+  font-weight: 700;
   cursor: pointer;
+  transition: all 0.2s;
+}
+
+.fintrack-settings-v2-modal-cancel {
+  background: var(--bg-soft-gray);
+  border: none;
+  color: var(--text-muted);
+}
+
+.fintrack-settings-v2-modal-confirm {
+  background: var(--color-danger);
+  border: none;
+  color: white;
+}
+
+/* ---------- 8. Responsive ---------- */
+@media (max-width: 1100px) {
+  .fintrack-settings-v2-root {
+    grid-template-columns: 1fr;
+  }
+  .fintrack-settings-v2-main {
+    grid-column: 1;
+    text-align: center;
+  }
+  .fintrack-settings-v2-hero {
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .fintrack-settings-v2-grid {
+    grid-template-columns: 1fr;
+  }
+  .fintrack-settings-v2-info {
+    text-align: left;
+  }
+}
+
+@keyframes modalScale {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }

@@ -1,110 +1,266 @@
 // src/pages/Settings.jsx
-
 import React, { useState } from "react";
-import { FiBell, FiMoon, FiTrash2, FiLogOut } from "react-icons/fi";
+import {
+  FiBell,
+  FiMoon,
+  FiTrash2,
+  FiLogOut,
+  FiShield,
+  FiSliders,
+  FiCheckCircle,
+  FiCpu,
+} from "react-icons/fi";
+
+// Layout Components
 import AppHeader from "../components/AppHeader.jsx";
 import Sidebar from "../components/Sidebar.jsx";
 import AppFooter from "../components/AppFooter.jsx";
+
+// Hooks & Utils
+import STORAGE_KEYS, {
+  removeFromStorage,
+  saveToStorage,
+  getFromStorage,
+} from "../utils/localStorage";
+import { useNotifications } from "../hooks/useNotifications";
+
 import "../styles/Settings.css";
 
-import STORAGE_KEYS, { removeFromStorage } from "../utils/localStorage";
-
 function Settings() {
+  const { addNotification } = useNotifications();
+
+  // --- Global State ---
+  const [transactions, setTransactions] = useState(() =>
+    getFromStorage(STORAGE_KEYS.TRANSACTIONS, []),
+  );
+
+  // --- UI State ---
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [notifications, setNotifications] = useState(true);
+  const [twoFactor, setTwoFactor] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  // --- Handlers ---
+  // --- Interface Handlers ---
   const handleToggleDarkMode = () => {
     setDarkMode((prev) => !prev);
     document.body.classList.toggle("dark-theme", !darkMode);
   };
 
-  const handleToggleNotifications = () => {
-    setNotifications((prev) => !prev);
-  };
-
-  const handleClearData = () => {
-    removeFromStorage(STORAGE_KEYS.TRANSACTIONS);
-    removeFromStorage(STORAGE_KEYS.GOALS);
-    removeFromStorage(STORAGE_KEYS.BILLS);
-    removeFromStorage(STORAGE_KEYS.BUDGETS);
-    alert("All data cleared successfully!");
-    setShowConfirm(false);
-  };
+  const handleToggleNotifications = () => setNotifications((prev) => !prev);
+  const handleToggle2FA = () => setTwoFactor((prev) => !prev);
 
   const handleLogout = () => {
     removeFromStorage(STORAGE_KEYS.USER);
     window.location.href = "/login";
   };
 
+  // --- Data & Automation Handlers ---
+  const handleClearData = () => {
+    const keysToRemove = [
+      STORAGE_KEYS.TRANSACTIONS,
+      STORAGE_KEYS.GOALS,
+      STORAGE_KEYS.BILLS,
+      STORAGE_KEYS.BUDGETS,
+    ];
+    keysToRemove.forEach((key) => removeFromStorage(key));
+    setTransactions([]);
+    setShowConfirm(false);
+    addNotification("System: Financial data purged successfully.");
+  };
+
+  // 1. To stop just ONE specific recurring transaction
+  const handleStopSingleRecurring = (id) => {
+    const updated = transactions.map((t) =>
+      t.id === id ? { ...t, recurring: false } : t,
+    );
+    setTransactions(updated);
+    saveToStorage(STORAGE_KEYS.TRANSACTIONS, updated);
+    addNotification("Standing Order Deactivated");
+  };
+
+  // 2. To stop ALL recurring transactions (The Kill Switch)
+  const handleDeleteAllRecurring = () => {
+    const updated = transactions.map((t) => ({ ...t, recurring: false }));
+    setTransactions(updated);
+    saveToStorage(STORAGE_KEYS.TRANSACTIONS, updated);
+    addNotification("All Automated Protocols Terminated 🛑");
+  };
+
+  const recurringTransactions = transactions.filter((t) => t.recurring);
+
   return (
     <div
-      className={`settings-page-container ${sidebarOpen ? "sidebar-open" : ""}`}
+      className={`fintrack-settings-v2-root ${sidebarOpen ? "sidebar-open" : ""}`}
     >
-      {/* Header + Sidebar */}
       <AppHeader
         isSidebarOpen={sidebarOpen}
         onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
       />
+
       {sidebarOpen && (
         <div
-          className="sidebar-overlay"
+          className="fintrack-overlay"
           onClick={() => setSidebarOpen(false)}
         />
       )}
+
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      {/* Main */}
-      <main className="settings-page-main">
-        <header className="settings-banner">
-          <h1>⚙ Settings</h1>
-          <p>Manage your app preferences and account options.</p>
+      <main className="fintrack-settings-v2-main">
+        <header className="fintrack-settings-v2-hero">
+          <span className="eyebrow">Workspace Control</span>
+          <h1 className="fintrack-settings-v2-title">Configuration</h1>
+          <p className="fintrack-settings-v2-subtitle">
+            Tailor your workspace, security protocols, and automated ledger
+            logic.
+          </p>
         </header>
 
-        <div className="settings-layout">
-          {/* Preferences */}
-          <section className="settings-card">
-            <h2>Preferences</h2>
-            <div className="settings-option">
-              <span>
-                <FiMoon /> Dark Mode
-              </span>
-              <label className="switch">
-                <input
-                  type="checkbox"
-                  checked={darkMode}
-                  onChange={handleToggleDarkMode}
-                />
-                <span className="slider"></span>
-              </label>
+        <div className="fintrack-settings-v2-grid">
+          {/* Section: Automation Management (Full Width) */}
+          <section className="fintrack-settings-v2-card full-width-card">
+            <div className="fintrack-settings-v2-card-header">
+              <FiCpu className="fintrack-settings-v2-header-icon" />
+              <h2>Active Standing Orders</h2>
             </div>
 
-            <div className="settings-option">
-              <span>
-                <FiBell /> Notifications
-              </span>
-              <label className="switch">
-                <input
-                  type="checkbox"
-                  checked={notifications}
-                  onChange={handleToggleNotifications}
-                />
-                <span className="slider"></span>
-              </label>
+            <div className="automation-audit-list">
+              {recurringTransactions.length === 0 ? (
+                <div className="empty-audit-state">
+                  <p className="text-muted-dark">
+                    No automated protocols currently active.
+                  </p>
+                </div>
+              ) : (
+                recurringTransactions.map((tx) => (
+                  <div key={tx.id} className="automation-audit-row">
+                    <div className="audit-info">
+                      <span className="audit-category">{tx.category}</span>
+                      <span className="audit-desc">
+                        {tx.description || "Untitled Protocol"}
+                      </span>
+                    </div>
+                    <div className="audit-logic">
+                      <span className="audit-frequency">
+                        Frequency: {tx.frequency}
+                      </span>
+                      <span className={`audit-amount ${tx.type}`}>
+                        {tx.type === "income" ? "+" : "-"}${tx.amount}
+                      </span>
+                    </div>
+                    <button
+                      className="btn-stop-auto"
+                      onClick={() => handleStopSingleRecurring(tx.id)}
+                      title="Disable Automation"
+                    >
+                      Stop
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {recurringTransactions.length > 0 && (
+              <div
+                className="fintrack-settings-v2-danger-zone"
+                style={{ marginTop: "2.5rem" }}
+              >
+                <p>System Override</p>
+                <div className="fintrack-settings-v2-actions">
+                  <button
+                    className="fintrack-settings-v2-btn-clear"
+                    onClick={handleDeleteAllRecurring}
+                  >
+                    <FiTrash2 /> Terminate All Standing Orders
+                  </button>
+                </div>
+              </div>
+            )}
+          </section>
+
+          {/* Section: Interface Preferences */}
+          <section className="fintrack-settings-v2-card">
+            <div className="fintrack-settings-v2-card-header">
+              <FiSliders className="fintrack-settings-v2-header-icon" />
+              <h2>Interface</h2>
+            </div>
+
+            <div className="fintrack-settings-v2-row">
+              <div className="fintrack-settings-v2-info">
+                <FiMoon />
+                <div className="fintrack-settings-v2-text">
+                  <label>Dark Aesthetic</label>
+                  <span>Midnight mode for low-light environments.</span>
+                </div>
+              </div>
+              <button
+                className={`fintrack-settings-v2-switch ${darkMode ? "active" : ""}`}
+                onClick={handleToggleDarkMode}
+              >
+                <div className="fintrack-settings-v2-toggle-knob" />
+              </button>
+            </div>
+
+            <div className="fintrack-settings-v2-row">
+              <div className="fintrack-settings-v2-info">
+                <FiBell />
+                <div className="fintrack-settings-v2-text">
+                  <label>Smart Notifications</label>
+                  <span>Alerts for significant budget shifts.</span>
+                </div>
+              </div>
+              <button
+                className={`fintrack-settings-v2-switch ${notifications ? "active" : ""}`}
+                onClick={handleToggleNotifications}
+              >
+                <div className="fintrack-settings-v2-toggle-knob" />
+              </button>
             </div>
           </section>
 
-          {/* Account */}
-          <section className="settings-card danger-zone">
-            <h2>Account</h2>
-            <button className="clear-btn" onClick={() => setShowConfirm(true)}>
-              <FiTrash2 /> Clear All Data
-            </button>
-            <button className="logout-btn" onClick={handleLogout}>
-              <FiLogOut /> Log Out
-            </button>
+          {/* Section: Security & Privacy */}
+          <section className="fintrack-settings-v2-card">
+            <div className="fintrack-settings-v2-card-header">
+              <FiShield className="fintrack-settings-v2-header-icon" />
+              <h2>Security</h2>
+            </div>
+
+            <div className="fintrack-settings-v2-row">
+              <div className="fintrack-settings-v2-info">
+                <FiCheckCircle />
+                <div className="fintrack-settings-v2-text">
+                  <label>Two-Factor Auth</label>
+                  <span>Enhanced account security protocols.</span>
+                </div>
+              </div>
+              <button
+                className={`fintrack-settings-v2-switch ${twoFactor ? "active" : ""}`}
+                onClick={handleToggle2FA}
+              >
+                <div className="fintrack-settings-v2-toggle-knob" />
+              </button>
+            </div>
+
+            <div className="fintrack-settings-v2-divider" />
+
+            <div className="fintrack-settings-v2-danger-zone">
+              <p>Critical Actions</p>
+              <div className="fintrack-settings-v2-actions">
+                <button
+                  className="fintrack-settings-v2-btn-clear"
+                  onClick={() => setShowConfirm(true)}
+                >
+                  <FiTrash2 /> Clear Financial Records
+                </button>
+                <button
+                  className="fintrack-settings-v2-btn-logout"
+                  onClick={handleLogout}
+                >
+                  <FiLogOut /> Sign Out Session
+                </button>
+              </div>
+            </div>
           </section>
         </div>
       </main>
@@ -113,18 +269,28 @@ function Settings() {
 
       {/* Confirmation Modal */}
       {showConfirm && (
-        <div className="confirm-overlay">
-          <div className="confirm-box">
-            <h3>⚠ Confirm Action</h3>
+        <div className="fintrack-settings-v2-modal-overlay">
+          <div className="fintrack-settings-v2-modal">
+            <div className="fintrack-settings-v2-modal-icon">
+              <FiTrash2 />
+            </div>
+            <h3>Purge All Data?</h3>
             <p>
-              This will permanently delete all your financial data. Continue?
+              This action is irreversible. All transactions, budgets, and goals
+              will be permanently erased from the local vault.
             </p>
-            <div className="confirm-actions">
-              <button className="yes-btn" onClick={handleClearData}>
-                Yes
+            <div className="fintrack-settings-v2-modal-actions">
+              <button
+                className="fintrack-settings-v2-modal-cancel"
+                onClick={() => setShowConfirm(false)}
+              >
+                Cancel
               </button>
-              <button className="no-btn" onClick={() => setShowConfirm(false)}>
-                No
+              <button
+                className="fintrack-settings-v2-modal-confirm"
+                onClick={handleClearData}
+              >
+                Confirm Purge
               </button>
             </div>
           </div>

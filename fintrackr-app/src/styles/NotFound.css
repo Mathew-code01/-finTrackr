@@ -1,40 +1,74 @@
 /* src/styles/NotFound.css */
 
-.notfound-container {
+/* src/styles/NotFound.css */
+
+.notfound-root {
+  background-color: var(--bg-pure-white);
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+.full-height-center {
+  flex: 1;
+  display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 80vh;
+  padding: var(--section-padding) 0;
+}
+
+.hero-centered {
+  max-width: 600px;
+  margin: 0 auto;
   text-align: center;
-  padding: 2rem;
-  color: var(--color-text, #333);
 }
 
-.notfound-title {
-  font-size: clamp(4rem, 12vw, 7rem);
-  font-weight: 800;
-  color: var(--color-primary, #1e88e5);
-  margin: 0;
+/* Reusing your Agency Text Styles */
+.notfound-description {
+  color: var(--text-muted);
+  font-family: var(--font-primary);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  letter-spacing: var(--letter-spacing-tight);
+  margin-bottom: var(--space-lg);
+  max-width: 450px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.notfound-subtitle {
-  font-size: clamp(1rem, 2.5vw, 1.4rem);
-  margin: 1rem 0 2rem;
-  color: var(--color-text-light, #666);
-}
-
-.notfound-btn {
-  background: var(--color-primary, #1e88e5);
-  color: #fff;
-  text-decoration: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--radius-md, 8px);
+/* High-End Button Logic */
+.btn-agency-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background-color: var(--bg-deep-obsidian);
+  color: var(--text-on-dark);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-pro);
   font-weight: 600;
-  transition: background 0.3s ease, transform 0.2s ease;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid transparent;
 }
 
-.notfound-btn:hover {
-  background: #1565c0;
+.btn-agency-primary:hover {
+  background-color: var(--color-accent);
   transform: translateY(-2px);
+  box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+}
+
+.mini-footer-accent {
+  height: 10vh;
+  background-color: var(--bg-deep-obsidian);
+  border-top: var(--border-on-dark);
+}
+
+/* Responsive adjustment for section padding */
+@media (max-width: 768px) {
+  .full-height-center {
+    padding: var(--space-xl) var(--space-md);
+  }
 }

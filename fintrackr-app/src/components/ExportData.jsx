@@ -4,8 +4,6 @@
 // src/components/ExportData.jsx
 // src/components/ExportData.jsx
 // src/components/ExportData.jsx
-// src/components/ExportData.jsx
-// src/components/ExportData.jsx
 import React, { useRef, useState, useEffect } from "react";
 import {
   FaFileExport,
@@ -22,170 +20,117 @@ function ExportData({ transactions, onImport }) {
   const [showModal, setShowModal] = useState(false);
   const [status, setStatus] = useState({ type: "", message: "" });
 
-  // Auto-clear with fade
   useEffect(() => {
     if (status.message) {
-      const fadeTimer = setTimeout(() => {
-        setStatus((prev) => ({ ...prev, fade: true }));
-      }, 3000); // start fade after 3s
-
-      const clearTimer = setTimeout(() => {
-        setStatus({ type: "", message: "", fade: false });
-      }, 4000); // fully clear after 4s
-
-      return () => {
-        clearTimeout(fadeTimer);
-        clearTimeout(clearTimer);
-      };
+      const timer = setTimeout(
+        () => setStatus({ type: "", message: "", fade: false }),
+        4000,
+      );
+      return () => clearTimeout(timer);
     }
   }, [status.message]);
 
-  // --- Export ---
   const handleExport = () => {
-    if (!transactions || transactions.length === 0) {
-      setStatus({ type: "warning", message: "⚠ No transactions to export." });
+    if (!transactions.length) {
+      setStatus({ type: "warning", message: "No data available to export." });
       return;
     }
-
-    try {
-      const blob = new Blob([JSON.stringify(transactions, null, 2)], {
-        type: "application/json",
-      });
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "transactions.json";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-
-      URL.revokeObjectURL(url);
-      setStatus({
-        type: "success",
-        message: "✅ Transactions exported successfully!",
-      });
-    } catch (error) {
-      setStatus({
-        type: "error",
-        message: "❌ Failed to export transactions.",
-      });
-      console.error("Export error:", error);
-    }
-  };
-
-  // --- Import ---
-  const handleImportClick = () => {
-    fileInputRef.current.click();
+    const blob = new Blob([JSON.stringify(transactions, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "FinTrackr_Vault_Export.json";
+    a.click();
+    setStatus({
+      type: "success",
+      message: "Vault data exported successfully.",
+    });
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     const reader = new FileReader();
     reader.onload = (event) => {
       try {
         const data = JSON.parse(event.target.result);
-        if (!Array.isArray(data)) throw new Error("Invalid file format");
-
         setImportedData(data);
         setShowModal(true);
-      } catch (error) {
+      } catch (err) {
+        console.log(err)
         setStatus({
           type: "error",
-          message: "❌ Failed to import transactions.",
+          message: "Integrity check failed: Invalid file.",
         });
-        console.error("Import error:", error);
       }
     };
     reader.readAsText(file);
   };
 
-  // --- Confirm Replace ---
-  const confirmReplace = () => {
-    onImport(importedData);
-    setStatus({
-      type: "success",
-      message: "✅ Transactions replaced with imported data!",
-    });
-    setShowModal(false);
-    setImportedData(null);
-  };
-
-  // --- Confirm Merge ---
-  const confirmMerge = () => {
-    const merged = [
-      ...transactions,
-      ...importedData.filter(
-        (imp) => !transactions.some((t) => t.id === imp.id)
-      ),
-    ];
-    onImport(merged);
-    setStatus({
-      type: "success",
-      message: "✅ Imported transactions merged successfully!",
-    });
-    setShowModal(false);
-    setImportedData(null);
-  };
-
   return (
-    <div className="chart-card export-data">
-      <p className="export-info">
-        Backup your transactions as a file (.json). You can also restore them
-        later by importing.
+    <div className="dark-glass-card export-section">
+      <h3 className="elegant-heading-xs">Data Portability</h3>
+      <p className="text-muted-dark small-text">
+        Securely archive or restore your financial vault records.
       </p>
 
-      <div className="export-buttons">
-        <button onClick={handleExport}>
-          <FaFileExport /> Export Transactions
+      <div className="export-action-grid">
+        <button className="btn-outline-dark" onClick={handleExport}>
+          <FaFileExport /> <span>Export JSON</span>
         </button>
-        <button onClick={handleImportClick} className="import-btn">
-          <FaFileImport /> Import Transactions
+        <button
+          className="btn-outline-dark"
+          onClick={() => fileInputRef.current.click()}
+        >
+          <FaFileImport /> <span>Import JSON</span>
         </button>
         <input
           type="file"
           ref={fileInputRef}
-          accept="application/json"
-          style={{ display: "none" }}
+          hidden
+          accept=".json"
           onChange={handleFileChange}
         />
       </div>
 
-      {/* ✅ Inline feedback with auto-clear */}
       {status.message && (
-        <p
-          className={`export-status ${status.type} ${
-            status.fade ? "fade-out" : ""
-          }`}
-        >
-          {status.message}
-        </p>
+        <div className={`status-toast ${status.type}`}>{status.message}</div>
       )}
 
-      {/* --- Custom Modal --- */}
       {showModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3>Import Transactions</h3>
-            <p>
-              You are importing <b>{importedData.length}</b> transactions. Do
-              you want to <b>replace</b> your current list, or <b>merge</b>{" "}
-              them?
+        <div className="dark-modal-overlay">
+          <div className="dark-modal-box">
+            <h4 className="elegant-heading-xs">Import Conflict</h4>
+            <p className="small-text">
+              Detected {importedData.length} records. Choose an integration
+              strategy:
             </p>
-            <div className="modal-buttons">
-              <button className="replace-btn" onClick={confirmReplace}>
-                <FaSyncAlt /> Replace
-              </button>
-              <button className="merge-btn" onClick={confirmMerge}>
-                <FaPlus /> Merge
+            <div className="modal-actions-stacked">
+              <button
+                className="btn-primary-glow"
+                onClick={() => {
+                  onImport(importedData);
+                  setShowModal(false);
+                }}
+              >
+                <FaSyncAlt /> Replace Existing Vault
               </button>
               <button
-                className="cancel-btn"
+                className="btn-outline-dark"
+                onClick={() => {
+                  onImport([...transactions, ...importedData]);
+                  setShowModal(false);
+                }}
+              >
+                <FaPlus /> Merge Records
+              </button>
+              <button
+                className="btn-text-only"
                 onClick={() => setShowModal(false)}
               >
-                <FaTimes /> Cancel
+                <FaTimes /> Abort
               </button>
             </div>
           </div>

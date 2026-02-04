@@ -1,19 +1,29 @@
 /* src/styles/TopCategories.css */
-.top-categories {
-  background: var(--color-card-bg, #fff);
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  margin-top: 1rem;
-}
-.top-categories ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.top-categories li {
+/* src/styles/TopCategories.css */
+.top-cats-widget { margin-top: var(--space-xl); }
+
+.cat-list { list-style: none; padding: 0; }
+
+.cat-item {
   display: flex;
-  justify-content: space-between;
-  padding: 0.3rem 0;
-  border-bottom: 1px solid #eee;
+  align-items: baseline;
+  padding: var(--space-sm) 0;
+  font-size: 0.9rem;
 }
+
+.cat-label { color: var(--text-muted); }
+
+.cat-divider {
+  flex: 1;
+  border-bottom: 1px dotted var(--text-muted-on-dark);
+  margin: 0 var(--space-sm);
+  opacity: 0.2;
+}
+
+.cat-value {
+  font-weight: 600;
+  color: var(--text-main);
+  font-variant-numeric: tabular-nums;
+}
+
+.empty-msg { font-size: 0.8rem; color: var(--text-muted); font-style: italic; }

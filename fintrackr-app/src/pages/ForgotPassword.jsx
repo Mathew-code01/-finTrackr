@@ -1,7 +1,7 @@
 // src/pages/ForgotPassword.jsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FiMail } from "react-icons/fi";
+import { FiMail, FiArrowRight, FiArrowLeft } from "react-icons/fi";
 import { authService } from "../services/authService";
 import PublicHeader from "../components/PublicHeader.jsx";
 import PublicFooter from "../components/PublicFooter.jsx";
@@ -9,68 +9,82 @@ import "../styles/ForgotPassword.css";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-
   const navigate = useNavigate();
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      const users = authService.getAllUsers();
-      const found = users.find((u) => u.email === email);
 
-      if (found) {
-        // Create reset token
-        const token = Math.random().toString(36).substring(2);
-        const resetData = JSON.parse(
-          localStorage.getItem("resetTokens") || "{}"
-        );
-        resetData[token] = email;
-        localStorage.setItem("resetTokens", JSON.stringify(resetData));
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const users = authService.getAllUsers();
+    const found = users.find((u) => u.email === email);
 
-        // Redirect to reset page
-        navigate(`/reset-password/${token}`);
-      } else {
-        setError("No account found with this email.");
-        setMessage("");
-      }
-    };
+    if (found) {
+      const token = Math.random().toString(36).substring(2);
+      const resetData = JSON.parse(localStorage.getItem("resetTokens") || "{}");
+      resetData[token] = email;
+      localStorage.setItem("resetTokens", JSON.stringify(resetData));
 
+      // Navigate to reset page with high-end transition feel
+      navigate(`/reset-password/${token}`);
+    } else {
+      setError("No institutional account found with this email.");
+    }
+  };
 
   return (
     <div className="forgot-page">
       <PublicHeader />
 
-      <main className="forgot-content">
-        <div className="forgot-box">
-          <h2>Reset Your Password</h2>
-          <p className="subtitle">
-            Enter your email and we’ll send you a link to reset your password.
-          </p>
+      <main className="forgot-split-container">
+        {/* Left Visual Pane - Institutional Identity */}
+        <section className="forgot-visual-pane">
+          <div className="visual-content">
+            <span className="badge">Security Protocols</span>
+            <h1>
+              Restore Your <br /> Account <span>Access.</span>
+            </h1>
+            <p>
+              Our secure recovery system ensures your financial data remains
+              protected while you regain access.
+            </p>
+          </div>
+        </section>
 
-          <form className="forgot-form" onSubmit={handleSubmit}>
-            {message && <p className="success">{message}</p>}
-            {error && <p className="error">{error}</p>}
+        {/* Right Form Pane */}
+        <section className="forgot-form-pane">
+          <div className="form-wrapper">
+            <header className="form-header">
+              <h2>Password Recovery</h2>
+              <p>Enter your verified email to receive a secure reset link.</p>
+            </header>
 
-            <div className="input-group">
-              <FiMail className="input-icon" />
-              <input
-                type="email"
-                placeholder="Email Address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
+            <form className="forgot-form" onSubmit={handleSubmit}>
+              {error && <div className="error-msg">{error}</div>}
+
+              <div className="input-field">
+                <div className="field-inner">
+                  <FiMail className="field-icon" />
+                  <input
+                    type="email"
+                    placeholder="Corporate Email Address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              <button type="submit" className="prime-forgot-btn">
+                Send Recovery Link <FiArrowRight />
+              </button>
+            </form>
+
+            <div className="auth-footer">
+              <Link to="/login" className="back-link">
+                <FiArrowLeft /> Return to Secure Login
+              </Link>
             </div>
-
-            <button type="submit" className="forgot-btn">
-              Send Reset Link
-            </button>
-          </form>
-
-          <p className="back-link">
-            <Link to="/login">← Back to Login</Link>
-          </p>
-        </div>
+          </div>
+        </section>
       </main>
 
       <PublicFooter />

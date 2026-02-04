@@ -3,24 +3,27 @@
 import React from "react";
 import "../styles/Logo.css";
 
-function Logo() {
+function Logo({ variant = "dark" }) {
   return (
-    <div className="app-logo">
+    <div className={`ft-brand-container ft-variant-${variant}`}>
       <svg
-        className="logo-icon"
+        className="ft-brand-symbol"
+        viewBox="0 0 24 24"
+        fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 48 48"
       >
-        <circle cx="24" cy="24" r="22" className="logo-circle" />
-        <polyline
-          points="12,28 20,20 28,26 36,14"
-          className="logo-chart"
-        />
+        {/* Three geometric pillars representing institutional stability */}
+        <rect x="4" y="12" width="3" height="8" className="ft-pillar-1" />
+        <rect x="10" y="8" width="3" height="12" className="ft-pillar-2" />
+        <rect x="16" y="4" width="3" height="16" className="ft-pillar-3" />
       </svg>
-      <span className="logo-text">FinTrackr</span>
+
+      <div className="ft-brand-typography">
+        <span className="ft-logo-fin">Fin</span>
+        <span className="ft-logo-trackr">Trackr</span>
+      </div>
     </div>
   );
 }
 
 export default Logo;
-

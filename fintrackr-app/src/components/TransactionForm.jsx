@@ -3,7 +3,7 @@
 // src/components/TransactionForm.jsx
 // src/components/TransactionForm.jsx
 // src/components/TransactionForm.jsx
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import "../styles/TransactionForm.css";
 
 function TransactionForm({ onAdd, goals = [], budgets = {}, onSaveBudgets }) {
@@ -11,12 +11,13 @@ function TransactionForm({ onAdd, goals = [], budgets = {}, onSaveBudgets }) {
     type: "income",
     amount: "",
     category: "",
-    date: "",
+    date: new Date().toISOString().split("T")[0], // Default to current date
     description: "",
     recurring: false,
-    frequency: "",
+    frequency: "monthly",
     goal: "",
   });
+
   const [errors, setErrors] = useState({});
   const [budgetWarning, setBudgetWarning] = useState("");
 
@@ -24,6 +25,15 @@ function TransactionForm({ onAdd, goals = [], budgets = {}, onSaveBudgets }) {
     income: ["Salary", "Freelance", "Investment", "Other"],
     expense: ["Food", "Rent", "Transport", "Entertainment", "Bills", "Other"],
   };
+
+  // --- LOGIC: Professional Automation Summary ---
+  // This tells the user exactly how the frequency will affect their balance.
+  const automationSummary = useMemo(() => {
+    if (!form.recurring || !form.amount) return null;
+    const amt = parseFloat(form.amount).toLocaleString();
+    const action = form.type === "income" ? "deposited into" : "withdrawn from";
+    return `Note: $${amt} will be automatically ${action} your balance every ${form.frequency}.`;
+  }, [form.recurring, form.amount, form.frequency, form.type]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -33,191 +43,219 @@ function TransactionForm({ onAdd, goals = [], budgets = {}, onSaveBudgets }) {
     };
     setForm(newForm);
 
-    // Check budget warning
-    if (name === "amount" || name === "category") {
-      if (newForm.type === "expense" && newForm.category && newForm.amount) {
-        const budgetLimit = budgets[newForm.category] || Infinity;
-        if (parseFloat(newForm.amount) > budgetLimit) {
-          setBudgetWarning(
-            `⚠ Warning: This expense exceeds your budget for ${newForm.category}`
-          );
-        } else {
-          setBudgetWarning("");
-        }
+    // Dynamic Budget & Frequency Validation
+    if (
+      (name === "amount" || name === "category") &&
+      newForm.type === "expense"
+    ) {
+      const budgetLimit = budgets[newForm.category] || Infinity;
+      if (parseFloat(newForm.amount) > budgetLimit) {
+        setBudgetWarning(
+          `Limit Exceeded: Budget for ${newForm.category} is $${budgetLimit}`,
+        );
       } else {
         setBudgetWarning("");
       }
     }
   };
 
-  const validate = () => {
-    const newErrors = {};
-    if (!form.amount || form.amount <= 0) newErrors.amount = "Enter a valid amount.";
-    if (!form.category) newErrors.category = "Category is required.";
-    if (!form.date) newErrors.date = "Date is required.";
-    if (form.recurring && !form.frequency) newErrors.frequency = "Select frequency.";
-    return newErrors;
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
+    const newErrors = {};
+    if (!form.amount || form.amount <= 0) newErrors.amount = "Invalid amount";
+    if (!form.category) newErrors.category = "Required";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
-    setErrors({});
-    setBudgetWarning("");
 
+    // Professional Status Mapping
     onAdd({
       id: Date.now(),
       ...form,
       amount: parseFloat(form.amount),
+      status: form.recurring ? "Automated Standing Order" : "Manual Entry",
     });
 
+    // Reset Form to initial state
     setForm({
       type: "income",
       amount: "",
       category: "",
-      date: "",
+      date: new Date().toISOString().split("T")[0],
       description: "",
       recurring: false,
-      frequency: "",
+      frequency: "monthly",
       goal: "",
     });
+    setErrors({});
   };
 
   return (
-    <form className="transaction-form" onSubmit={handleSubmit}>
-      <h2>Add Transaction</h2>
+    <form className="dark-tx-form" onSubmit={handleSubmit}>
+      <div className="form-grid-modern">
+        {/* Type Group */}
+        <div className="input-group">
+          <label className="dark-label">Cash Flow Type</label>
+          <select
+            name="type"
+            value={form.type}
+            onChange={handleChange}
+            className="dark-select"
+          >
+            <option value="income">Credit (Inflow)</option>
+            <option value="expense">Debit (Outflow)</option>
+          </select>
+        </div>
 
-      {/* Type */}
-      <div className="form-row">
-        <label>Type</label>
-        <select name="type" value={form.type} onChange={handleChange}>
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
-        </select>
-      </div>
+        {/* Amount Group */}
+        <div className="input-group">
+          <label className="dark-label">Value (USD)</label>
+          <input
+            type="number"
+            name="amount"
+            value={form.amount}
+            onChange={handleChange}
+            placeholder="0.00"
+            className={`dark-input ${errors.amount ? "input-error" : ""}`}
+          />
+        </div>
 
-      {/* Amount */}
-      <div className="form-row">
-        <label>Amount ($)</label>
-        <input
-          type="number"
-          name="amount"
-          value={form.amount}
-          onChange={handleChange}
-          placeholder="0.00"
-          min="0.01"
-          required
-        />
-        {errors.amount && <span className="error-msg">{errors.amount}</span>}
-      </div>
-
-      {/* Category */}
-      <div className="form-row">
-        <label>Category</label>
-        <select name="category" value={form.category} onChange={handleChange} required>
-          <option value="">Select category</option>
-          {categories[form.type].map((cat) => (
-            <option key={cat} value={cat}>{cat}</option>
-          ))}
-        </select>
-        {errors.category && <span className="error-msg">{errors.category}</span>}
-      </div>
-
-      {/* Budget warning */}
-      {budgetWarning && <p className="budget-warning">{budgetWarning}</p>}
-
-      {/* Optional Goal (only for income) */}
-      {form.type === "income" && goals.length > 0 && (
-        <div className="form-row">
-          <label>Assign to Goal</label>
-          <select name="goal" value={form.goal} onChange={handleChange}>
-            <option value="">-- None --</option>
-            {goals.map((g) => (
-              <option key={g.name} value={g.name}>{g.name}</option>
+        {/* Category Group */}
+        <div className="input-group">
+          <label className="dark-label">Classification</label>
+          <select
+            name="category"
+            value={form.category}
+            onChange={handleChange}
+            className="dark-select"
+          >
+            <option value="">Select Category</option>
+            {categories[form.type].map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
             ))}
           </select>
         </div>
-      )}
 
-      {/* Budget Form (only for expenses) */}
-      {form.type === "expense" && onSaveBudgets && (
-        <div className="budget-section">
-          <h3>Set Budgets</h3>
-          {categories.expense.map((cat) => (
-            <div className="form-row" key={cat}>
-              <label>{cat} Budget ($)</label>
-              <input
-                type="number"
-                min="0"
-                value={budgets[cat] || ""}
-                onChange={(e) =>
-                  onSaveBudgets({
-                    ...budgets,
-                    [cat]: Number(e.target.value),
-                  })
-                }
-                placeholder="Set budget"
-              />
+        {/* Date Group */}
+        <div className="input-group">
+          <label className="dark-label">Effective Date</label>
+          <input
+            type="date"
+            name="date"
+            value={form.date}
+            onChange={handleChange}
+            className="dark-input"
+          />
+        </div>
+
+        {/* Automation & Frequency Section */}
+        <div className="automation-logic-box full-width">
+          <label className="dark-checkbox">
+            <input
+              type="checkbox"
+              name="recurring"
+              checked={form.recurring}
+              onChange={handleChange}
+            />
+            <span className="checkbox-text">
+              Establish Automated Standing Order
+            </span>
+          </label>
+
+          {form.recurring && (
+            <div className="frequency-pill-container">
+              <label className="dark-label-xs">Frequency Cadence</label>
+              <div className="pill-group">
+                {["daily", "weekly", "monthly"].map((f) => (
+                  <button
+                    key={f}
+                    type="button"
+                    className={`pill-btn ${form.frequency === f ? "active" : ""}`}
+                    onClick={() => setForm({ ...form, frequency: f })}
+                  >
+                    {f}
+                  </button>
+                ))}
+              </div>
             </div>
-          ))}
+          )}
         </div>
-      )}
 
-      {/* Date */}
-      <div className="form-row">
-        <label>Date</label>
-        <input type="date" name="date" value={form.date} onChange={handleChange} required />
-        {errors.date && <span className="error-msg">{errors.date}</span>}
-      </div>
+        {/* Smart Automation Summary */}
+        {automationSummary && (
+          <div className="automation-summary-strip full-width">
+            <div className="pulse-indicator"></div>
+            <span>{automationSummary}</span>
+          </div>
+        )}
 
-      {/* Description */}
-      <div className="form-row">
-        <label>Description</label>
-        <input type="text" name="description" value={form.description} onChange={handleChange} placeholder="Optional" />
-      </div>
+        {/* Goal Assignment - Full Width */}
+        {form.type === "income" && goals.length > 0 && (
+          <div className="input-group full-width">
+            <label className="dark-label">Allocate to Strategic Goal</label>
+            <select
+              name="goal"
+              value={form.goal}
+              onChange={handleChange}
+              className="dark-select"
+            >
+              <option value="">-- No Assignment --</option>
+              {goals.map((g) => (
+                <option key={g.name} value={g.name}>
+                  {g.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
-      {/* Recurring */}
-      <div className="form-row checkbox-row">
-        <label>
-          <input type="checkbox" name="recurring" checked={form.recurring} onChange={handleChange} /> Recurring?
-        </label>
-      </div>
+        {/* Budget Adjustment Control */}
+        {form.type === "expense" && form.category && onSaveBudgets && (
+          <div className="input-group full-width">
+            <label className="dark-label">
+              Adjust {form.category} Threshold
+            </label>
+            <input
+              type="number"
+              className="dark-input"
+              value={budgets[form.category] || ""}
+              onChange={(e) =>
+                onSaveBudgets({
+                  ...budgets,
+                  [form.category]: Number(e.target.value),
+                })
+              }
+              placeholder="Define budget limit..."
+            />
+          </div>
+        )}
 
-      {form.recurring && (
-        <div className="form-row">
-          <label>Frequency</label>
-          <select name="frequency" value={form.frequency} onChange={handleChange}>
-            <option value="">Select frequency</option>
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
-          </select>
-          {errors.frequency && <span className="error-msg">{errors.frequency}</span>}
+        {/* Memo Input */}
+        <div className="input-group full-width">
+          <label className="dark-label">Transaction Memo</label>
+          <input
+            type="text"
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+            placeholder="Reference notes..."
+            className="dark-input"
+          />
         </div>
-      )}
 
-      <div className="form-actions">
-        <button type="submit" className="add-btn">Add Transaction</button>
-        <button
-          type="button"
-          className="reset-btn"
-          onClick={() =>
-            setForm({
-              type: "income",
-              amount: "",
-              category: "",
-              date: "",
-              description: "",
-              recurring: false,
-              frequency: "",
-              goal: "",
-            })
-          }
-        >
-          Clear
+        {/* Error/Warning Strips */}
+        {budgetWarning && (
+          <div className="dark-warning-strip full-width">{budgetWarning}</div>
+        )}
+      </div>
+
+      <div className="dark-form-actions">
+        <button type="submit" className="btn-primary-glow">
+          Authorize Strategic Entry
         </button>
       </div>
     </form>

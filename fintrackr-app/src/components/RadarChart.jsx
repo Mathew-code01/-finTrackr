@@ -13,32 +13,35 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { FiDollarSign } from "react-icons/fi";
 
-function CustomTooltip({ active, payload }) {
+const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     return (
       <div
         style={{
-          background: "#fff",
-          padding: "8px 12px",
-          borderRadius: "8px",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+          background: "var(--bg-glass)",
+          backdropFilter: "var(--glass-blur)",
+          padding: "10px",
+          border: "var(--border-on-dark)",
+          borderRadius: "var(--radius-pro)",
+          color: "var(--text-on-dark)",
+          textAlign: "center",
         }}
       >
-        <p style={{ margin: 0, fontWeight: 600 }}>
+        <p style={{ margin: 0, fontSize: "12px", fontWeight: 500 }}>
           {payload[0].payload.category}
         </p>
-        <p style={{ margin: 0, color: "#ef4444" }}>
-          ${payload[0].value.toFixed(2)}
+        <p style={{ margin: 0, color: "var(--color-danger)", fontWeight: 700 }}>
+          ${payload[0].value.toLocaleString()}
         </p>
       </div>
     );
   }
   return null;
-}
+};
 
 function RadarChart({ transactions }) {
-  // Aggregate expenses by category
   const data = transactions.reduce((acc, t) => {
     if (t.type === "expense") {
       const existing = acc.find((c) => c.category === t.category);
@@ -48,52 +51,60 @@ function RadarChart({ transactions }) {
     return acc;
   }, []);
 
-  // ✅ Show a message instead of rendering an empty chart
-  if (data.length === 0) {
-    return (
-      <div
-        style={{
-          width: "100%",
-          height: 320,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "#9ca3af", // gray-400
-          fontSize: "1rem",
-        }}
-      >
-        No data yet
-      </div>
-    );
-  }
-
   return (
-    <div style={{ width: "100%", height: 320 }}>
-      <ResponsiveContainer width="100%" height={300}>
-        <ReRadarChart data={data} outerRadius={120}>
-          <PolarGrid stroke="#e5e7eb" />
-          <PolarAngleAxis dataKey="category" />
-          <PolarRadiusAxis />
-          <Radar
-            name="Expenses"
-            dataKey="value"
-            stroke="#ef4444"
-            fill="url(#radarGradient)"
-            fillOpacity={0.7}
-            dot={{ fill: "#ef4444", r: 4 }}
-          />
-          <defs>
-            <linearGradient id="radarGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#ef4444" stopOpacity={0.7} />
-              <stop offset="95%" stopColor="#ef4444" stopOpacity={0.1} />
-            </linearGradient>
-          </defs>
-          <Tooltip content={<CustomTooltip />} />
-        </ReRadarChart>
-      </ResponsiveContainer>
+    <div
+      style={{
+        width: "100%",
+        height: 320,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {data.length === 0 ? (
+        <div className="chart-placeholder">
+          <div style={{  opacity: 0.2, marginBottom: "12px", display: "flex", justifyContent: "center"}}>
+            <FiDollarSign size={40} color="var(--text-on-dark)" />
+          </div>
+          <p
+            style={{
+              fontSize: "11px",
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              color: "var(--text-muted-on-dark)",
+              fontWeight: 600,
+            }}
+          >
+            Awaiting Financial Data
+          </p>
+        </div>
+      ) : (
+        <ResponsiveContainer width="100%" height={300}>
+          <ReRadarChart data={data} outerRadius={100}>
+            <PolarGrid stroke="rgba(255,255,255,0.1)" />
+            <PolarAngleAxis
+              dataKey="category"
+              tick={{
+                fill: "var(--text-on-dark)",
+                fontSize: 11,
+                fontWeight: 300,
+              }}
+            />
+            <PolarRadiusAxis hide />
+            <Radar
+              name="Expenses"
+              dataKey="value"
+              stroke="var(--color-danger)"
+              fill="var(--color-danger)"
+              fillOpacity={0.25}
+              dot={{ fill: "var(--color-danger)", r: 3 }}
+            />
+            <Tooltip content={<CustomTooltip />} />
+          </ReRadarChart>
+        </ResponsiveContainer>
+      )}
     </div>
   );
 }
 
 export default RadarChart;
-

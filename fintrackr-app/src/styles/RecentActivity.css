@@ -1,18 +1,99 @@
 /* src/styles/RecentActivity.css */
-.recent-activity ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+/* src/styles/RecentActivity.css */
+
+/* src/styles/RecentActivity.css */
+
+.recent-activity {
+  margin-top: var(--space-lg);
 }
-.recent-activity li {
+
+.elegant-heading-xs {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--text-muted-on-dark);
+  margin-bottom: var(--space-md);
+  font-weight: 700;
+  opacity: 0.8;
+}
+
+.recent-activity .activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs); /* Tighter rhythm for "Recent" lists */
+}
+
+.activity-row {
   display: flex;
   justify-content: space-between;
-  padding: 0.4rem 0;
-  border-bottom: 1px solid #eee;
+  align-items: center;
+  padding: 14px var(--space-md);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-pro);
+  border-left: 3px solid transparent; /* Differentiation bar */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.recent-activity li.income {
-  color: green;
+
+/* Interaction States */
+.activity-row:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateX(4px);
 }
-.recent-activity li.expense {
-  color: red;
+
+/* Differentiation using your Variables */
+.activity-row.income {
+  border-left-color: var(--color-success);
+}
+
+.activity-row.expense {
+  border-left-color: var(--color-danger);
+}
+
+.activity-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.activity-date {
+  font-size: 0.6rem;
+  color: var(--text-muted-on-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
+.activity-desc {
+  font-size: 0.85rem;
+  color: var(--text-on-dark);
+  font-weight: 500;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+/* Dynamic Amounts with High-End Glow */
+.activity-amount {
+  font-family: var(--font-primary);
+  font-weight: 700;
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.activity-amount.income { 
+  color: var(--color-success);
+  text-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+}
+
+.activity-amount.expense { 
+  color: var(--text-on-dark); /* Less aggressive than pure red */
+  background: rgba(244, 63, 94, 0.1); /* Subtle rose background */
+  border: 1px solid rgba(244, 63, 94, 0.2);
+}
+
+.text-muted-dark {
+  color: var(--text-muted-on-dark);
+  font-size: 0.85rem;
+  font-style: italic;
+  padding: var(--space-md) 0;
 }

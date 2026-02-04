@@ -11,56 +11,44 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
+import { FiDollarSign } from "react-icons/fi";
 
-function CustomTooltip({ active, payload, label }) {
+const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
       <div
         style={{
-          background: "#fff",
-          padding: "8px 12px",
-          borderRadius: "8px",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+          background: "var(--bg-deep-obsidian)",
+          padding: "12px",
+          border: "var(--border-on-dark)",
+          borderRadius: "var(--radius-pro)",
+          color: "var(--text-on-dark)",
+          fontSize: "13px",
         }}
       >
-        <p style={{ margin: 0 }}>{label}</p>
-        <p style={{ margin: 0, color: "#1e88e5" }}>
-          Balance: ${payload[0].value.toFixed(2)}
+        <p style={{ margin: "0 0 4px 0", opacity: 0.5 }}>{label}</p>
+        <p style={{ margin: 0, color: "var(--color-accent)", fontWeight: 700 }}>
+          Balance: ${payload[0].value.toLocaleString()}
         </p>
       </div>
     );
   }
   return null;
-}
+};
 
 function LineChart({ transactions, timeframe }) {
   const now = new Date();
 
-  // Filter transactions by timeframe
   const filtered = transactions.filter((t) => {
     const txDate = new Date(t.date);
     if (timeframe === "daily")
       return txDate.toDateString() === now.toDateString();
-    if (timeframe === "weekly") {
-      const start = new Date(now);
-      start.setDate(now.getDate() - now.getDay());
-      const end = new Date(start);
-      end.setDate(start.getDate() + 6);
-      return txDate >= start && txDate <= end;
-    }
-    if (timeframe === "monthly")
-      return (
-        txDate.getMonth() === now.getMonth() &&
-        txDate.getFullYear() === now.getFullYear()
-      );
-    if (timeframe === "yearly")
-      return txDate.getFullYear() === now.getFullYear();
+    if (timeframe === "monthly") return txDate.getMonth() === now.getMonth();
     return true;
   });
 
-  // Sort and calculate cumulative balance
   const sorted = [...filtered].sort(
-    (a, b) => new Date(a.date) - new Date(b.date)
+    (a, b) => new Date(a.date) - new Date(b.date),
   );
   let balance = 0;
   const data = sorted.map((t) => {
@@ -85,29 +73,56 @@ function LineChart({ transactions, timeframe }) {
       }}
     >
       {data.length === 0 ? (
-        <p style={{ color: "#888", fontStyle: "italic" }}>No data yet</p>
+        <div className="chart-placeholder">
+          <div style={{  opacity: 0.2, marginBottom: "12px", display: "flex", justifyContent: "center"}}>
+            <FiDollarSign size={40} color="var(--text-on-dark)" />
+          </div>
+          <p
+            style={{
+              fontSize: "11px",
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              color: "var(--text-muted-on-dark)",
+              fontWeight: 600,
+            }}
+          >
+            Awaiting Financial Data
+          </p>
+        </div>
       ) : (
         <ResponsiveContainer width="100%" height={300}>
           <ReLineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-            <XAxis dataKey="date" />
-            <YAxis />
+            <CartesianGrid
+              strokeDasharray="2 2"
+              vertical={false}
+              stroke="rgba(255,255,255,0.05)"
+            />
+            <XAxis
+              dataKey="date"
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: "var(--text-muted-on-dark)", fontSize: 11 }}
+            />
+            <YAxis hide domain={["auto", "auto"]} />
             <Tooltip content={<CustomTooltip />} />
-            <Legend />
             <Line
               type="monotone"
               dataKey="balance"
-              stroke="#4f46e5"
+              stroke="var(--color-accent)"
               strokeWidth={3}
-              dot={{ r: 5, fill: "#4f46e5" }}
-              activeDot={{ r: 7 }}
+              dot={{
+                r: 4,
+                fill: "var(--bg-deep-obsidian)",
+                stroke: "var(--color-accent)",
+                strokeWidth: 2,
+              }}
+              activeDot={{ r: 6, strokeWidth: 0, fill: "var(--color-accent)" }}
             />
           </ReLineChart>
         </ResponsiveContainer>
       )}
     </div>
   );
-
 }
 
 export default LineChart;

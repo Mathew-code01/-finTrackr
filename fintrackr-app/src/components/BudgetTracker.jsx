@@ -1,5 +1,6 @@
 // src/components/BudgetTracker.jsx
 // src/components/BudgetTracker.jsx
+// src/components/BudgetTracker.jsx
 import React, { useState } from "react";
 import "../styles/BudgetTracker.css";
 import { filterByTimeframe } from "../utils/timeframeFilter";
@@ -11,45 +12,47 @@ function BudgetTracker({ budgets = {}, transactions = [], timeframe = "monthly",
   const handleChange = (category, value) => {
     const updated = { ...editableBudgets, [category]: Number(value) };
     setEditableBudgets(updated);
-    onSaveBudgets(updated); // persist to Dashboard
+    onSaveBudgets(updated);
   };
 
   return (
-    <div className="chart-card budget-tracker">
-      <h3>Budgets</h3>
-      {Object.keys(editableBudgets).length === 0 ? (
-        <p>No budgets set.</p>
-      ) : (
-        Object.entries(editableBudgets).map(([category, limit]) => {
+    <div className="budget-widget">
+      <h4 className="widget-label">Budget Efficiency</h4>
+      <div className="budget-stack">
+        {Object.entries(editableBudgets).map(([category, limit]) => {
           const spent = filteredTx
             .filter((t) => t.type === "expense" && t.category === category)
             .reduce((sum, t) => sum + t.amount, 0);
           const percent = Math.min((spent / limit) * 100, 100);
+          const isOver = spent > limit;
 
           return (
-            <div key={category} className="budget-item">
-              <span className="category-name">{category}</span>
-              <div className="budget-bar">
-                <div
-                  className={`budget-fill ${spent > limit ? "over" : ""}`}
-                  style={{ width: `${percent}%` }}
-                ></div>
+            <div key={category} className="budget-row">
+              <div className="budget-info">
+                <span className="cat-name">{category}</span>
+                <span className={`cat-status ${isOver ? "status-over" : ""}`}>
+                  {isOver ? "Over Limit" : `${Math.round(percent)}%`}
+                </span>
               </div>
-              <div className="budget-values">
+              <div className="budget-progress-bg">
+                <div 
+                  className={`budget-progress-fill ${isOver ? "fill-danger" : ""}`} 
+                  style={{ width: `${percent}%` }}
+                />
+              </div>
+              <div className="budget-input-group">
+                <span className="currency-symbol">$</span>
                 <input
                   type="number"
-                  min="0"
                   value={limit}
                   onChange={(e) => handleChange(category, e.target.value)}
                 />
-                <span className="spent">
-                  ${spent} / ${limit}
-                </span>
+                <span className="spent-total">Spent: ${spent.toLocaleString()}</span>
               </div>
             </div>
           );
-        })
-      )}
+        })}
+      </div>
     </div>
   );
 }

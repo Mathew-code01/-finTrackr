@@ -1,195 +1,316 @@
 /* src/styles/Home.css */
 
 /* src/styles/Home.css */
+/* src/styles/Home.css */
 
-.home-page {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  font-family: var(--font-primary);
-}
+/* src/styles/Home.css */
+/* src/styles/Home.css */
 
-/* Hero */
-.home-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: var(--spacing-xl) var(--spacing-md);
-}
-
-.home-content h2 {
-  font-size: 2.2rem;
-  margin-bottom: var(--spacing-md);
-  color: var(--color-text);
-}
-
-.home-content p {
-  font-size: 1.1rem;
-  max-width: 600px;
-  margin-bottom: var(--spacing-lg);
-  color: var(--color-text-light);
-}
-
-.get-started-btn {
-  background: var(--color-primary);
-  color: var(--white);
-  padding: var(--spacing-sm) var(--spacing-lg);
-  text-decoration: none;
-  border-radius: var(--radius-md);
-  font-weight: 600;
-  transition: background 0.3s ease;
-}
-
-.get-started-btn:hover {
-  background: var(--color-primary-dark);
-}
-
-/* Features Section */
-.features-section {
-  padding: var(--spacing-xl) var(--spacing-md);
-  background: var(--color-bg-light);
+/* --- HERO SECTION --- */
+.hero-section {
+  padding-top: 180px;
   text-align: center;
 }
 
-.features-section h3 {
-  font-size: 1.8rem;
-  margin-bottom: var(--spacing-lg);
-  color: var(--color-text);
-}
-
-.features-grid {
-  display: grid;
-  gap: var(--spacing-md);
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.feature-card {
-  background: var(--white);
-  padding: var(--spacing-lg) var(--spacing-md);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.feature-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-}
-
-.feature-icon {
-  font-size: 2.2rem;
-  color: var(--color-primary);
-  margin-bottom: var(--spacing-sm);
-}
-
-.feature-card h4 {
-  margin-bottom: var(--spacing-sm);
-  color: var(--color-text);
-}
-
-/* CTA Banner */
-.cta-banner {
-  background: var(--color-primary);
-  color: var(--white);
-  text-align: center;
-  padding: var(--spacing-xl) var(--spacing-md);
-}
-
-.cta-banner h3 {
-  font-size: 1.6rem;
-  margin-bottom: var(--spacing-md);
-}
-
-.cta-btn {
-  display: inline-block;
-  background: var(--white);
-  color: var(--color-primary);
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--radius-md);
-  font-weight: 600;
-  text-decoration: none;
-  transition: background 0.3s ease, color 0.3s ease;
-}
-
-.cta-btn:hover {
-  background: var(--color-primary-dark);
-  color: var(--white);
-}
-
-/* How It Works Section */
-.how-it-works {
-  padding: var(--spacing-xl) var(--spacing-md);
-  background: var(--white);
-  text-align: center;
-}
-
-.how-it-works h3 {
-  font-size: 1.8rem;
-  margin-bottom: var(--spacing-lg);
-  color: var(--color-text);
-}
-
-.steps-grid {
-  display: grid;
-  gap: var(--spacing-md);
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+.hero-content {
   max-width: 900px;
   margin: 0 auto;
 }
 
-.step-card {
-  padding: var(--spacing-lg) var(--spacing-md);
-  background: var(--color-bg-light);
-  border-radius: var(--radius-lg);
-  transition: background 0.3s;
+.hero-title {
+  font-size: clamp(2.8rem, 7vw, 4.8rem);
+  margin-bottom: var(--space-lg);
 }
 
-.step-card:hover {
-  background: #eef6ff;
+.hero-title span {
+  color: var(--text-muted);
 }
 
-.step-icon {
-  font-size: 2.2rem;
-  color: var(--color-primary);
-  margin-bottom: var(--spacing-sm);
+.hero-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto var(--space-xl);
 }
 
-/* Testimonials Section */
-.testimonials {
-  padding: var(--spacing-xl) var(--spacing-md);
-  background: var(--color-bg-light);
-  text-align: center;
+/* --- FEATURES GRID (SECTION 2 - DARK) --- */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Wider cards */
+  gap: var(--space-xl); /* Increased gap for breathing room */
 }
 
-.testimonials h3 {
-  font-size: 1.8rem;
-  margin-bottom: var(--spacing-lg);
-  color: var(--color-text);
+.feature-card {
+  padding: var(--space-xl);
+  background: rgba(255, 255, 255, 0.03);
+  border: var(--border-on-dark);
+  border-radius: var(--radius-pro);
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
+.feature-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-8px);
+  border-color: var(--color-accent);
+}
+
+.feature-icon {
+  font-size: 2rem;
+  color: var(--color-accent);
+  margin-bottom: var(--space-lg);
+}
+
+/* --- STEPS CONTAINER (SECTION 3 - WHITE) --- */
+.steps-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xl);
+  counter-reset: step-counter;
+}
+
+.step-item {
+  position: relative;
+  padding-top: var(--space-xl);
+  border-top: 1px solid rgba(15, 23, 42, 0.1);
+}
+
+/* Sophisticated Step Indicator (Replacing numbers 01, 02) */
+.step-item::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background: var(--color-accent);
+}
+
+.step-item h4 {
+  font-size: 1.3rem;
+  margin-bottom: var(--space-md);
+}
+
+.step-item p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* --- SECURITY & TRUST SECTION --- */
+.security-box {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  align-items: center;
+  gap: var(--space-xl);
+}
+
+.trust-list {
+  list-style: none;
+  margin-top: var(--space-lg);
+}
+
+.trust-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+.big-icon {
+  font-size: 10rem;
+  color: var(--bg-soft-gray);
+  filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.1));
+}
+
+/* --- BUTTONS --- */
+.hero-actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+}
+
+.btn-solid {
+  background: var(--color-accent);
+  color: white;
+  padding: 16px 36px;
+  border-radius: var(--radius-pro);
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.btn-outline {
+  border: 1px solid var(--text-muted);
+  color: var(--text-main);
+  padding: 16px 36px;
+  border-radius: var(--radius-pro);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* --- RESPONSIVE FIXES --- */
+@media (max-width: 1024px) {
+  .steps-container {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+}
+
+@media (max-width: 768px) {
+  section {
+    padding: var(--space-xl) 0;
+  }
+  
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .security-box {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .security-visual { display: none; }
+}
+
+/* --- SECTION 4: TESTIMONIALS (Deep Obsidian) --- */
 .testimonials-grid {
   display: grid;
-  gap: var(--spacing-md);
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  max-width: 1000px;
-  margin: 0 auto;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-xl);
+  margin-top: var(--space-xl);
 }
 
 .testimonial-card {
-  background: var(--white);
-  padding: var(--spacing-md);
-  border-radius: var(--radius-lg);
-  font-style: italic;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  padding: var(--space-xl);
+  background: rgba(255, 255, 255, 0.02);
+  border: var(--border-on-dark);
+  border-radius: var(--radius-pro);
+  position: relative;
+  transition: all 0.4s ease;
+  /* Making the card taller and more "boxed" */
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.testimonial-card h5 {
-  margin-top: var(--spacing-md);
-  font-style: normal;
-  color: var(--color-primary);
+.testimonial-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--color-accent);
+}
+
+.testimonial-card p {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  font-style: italic;
+  color: var(--text-on-dark);
+  margin-bottom: var(--space-lg);
+}
+
+.author {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+/* --- SECTION 5: SECURITY (Boxed Inset Style) --- */
+.security-section {
+  padding: var(--section-padding) 0;
+}
+
+/* This creates the "Boxed" look for the security content */
+.security-inner-card {
+  background: var(--bg-soft-gray);
+  border: 1px solid rgba(15, 23, 42, 0.05);
+  border-radius: 32px; /* Extra rounded for premium app feel */
+  padding: var(--space-xl);
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  align-items: center;
+  gap: var(--space-xl);
+  box-shadow: var(--shadow-soft);
+}
+
+.security-text {
+  padding-right: var(--space-xl);
+}
+
+.security-text p {
+  margin: var(--space-md) 0 var(--space-lg);
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+.trust-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Split list into two columns for width */
+  gap: var(--space-md);
+  list-style: none;
+}
+
+.trust-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-main);
+}
+
+.trust-list svg {
+  color: var(--color-success);
+  font-size: 1.2rem;
+}
+
+.security-visual {
+  background: var(--bg-pure-white);
+  border-radius: 24px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgba(15, 23, 42, 0.03);
+}
+
+.big-icon {
+  font-size: 8rem;
+  color: var(--color-accent);
+  filter: drop-shadow(0 10px 20px rgba(99, 102, 241, 0.15));
+}
+
+/* --- RESPONSIVE FIXES --- */
+@media (max-width: 1024px) {
+  .security-inner-card {
+    grid-template-columns: 1fr;
+    padding: var(--space-lg);
+  }
+  
+  .security-text {
+    padding-right: 0;
+    text-align: center;
+  }
+
+  .trust-list {
+    justify-items: center;
+  }
+
+  .security-visual {
+    padding: var(--space-xl);
+  }
+}
+
+@media (max-width: 768px) {
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .trust-list {
+    grid-template-columns: 1fr;
+  }
 }

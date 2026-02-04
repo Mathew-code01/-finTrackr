@@ -2,73 +2,71 @@
 // src/components/PublicHeader.jsx
 // src/components/PublicHeader.jsx
 // src/components/PublicHeader.jsx
-// src/components/PublicHeader.jsx
 import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "../styles/PublicHeader.css";
-import Logo from "./Logo"; // ✅ Import your logo component
+import Logo from "./Logo";
 
 function PublicHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const location = useLocation();
   const menuRef = useRef(null);
-  const toggleRef = useRef(null);
 
-  // ✅ Close menu when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(event.target) &&
-        toggleRef.current &&
-        !toggleRef.current.contains(event.target)
-      ) {
-        setMenuOpen(false);
-      }
-    };
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    const handleScroll = () => setScrolled(window.scrollY > 20);
 
-    if (menuOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleScroll);
+
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScroll);
     };
-  }, [menuOpen]);
+  }, []);
+
+  /** * LOGIC FOR HIGH-END VISIBILITY:
+   * 1. If we are on mobile (isMobile), logo is ALWAYS "dark" because the background is white.
+   * 2. If we are on desktop:
+   * - "dark" if scrolled or menu is open.
+   * - "light" if at the top (over the dark hero section).
+   */
+  const logoVariant = isMobile || scrolled || menuOpen ? "dark" : "light";
 
   return (
-    <header className="public-header">
-      <div className="container">
-        {/* ✅ Logo */}
-        <Logo />
+    <header
+      className={`public-header ${scrolled ? "scrolled" : ""} ${menuOpen ? "menu-active" : ""}`}
+    >
+      <div className="container header-content">
+        <Logo variant={logoVariant} />
 
-        {/* ✅ Hamburger (mobile menu) */}
         <div
-          ref={toggleRef}
           className={`menu-toggle ${menuOpen ? "active" : ""}`}
-          onClick={() => setMenuOpen((prev) => !prev)}
+          onClick={() => setMenuOpen(!menuOpen)}
         >
-          <span
-            style={{
-              transform: menuOpen ? "rotate(45deg) translateY(6px)" : "",
-            }}
-          ></span>
-          <span style={{ opacity: menuOpen ? "0" : "1" }}></span>
-          <span
-            style={{
-              transform: menuOpen ? "rotate(-45deg) translateY(-6px)" : "",
-            }}
-          ></span>
+          <span></span>
+          <span></span>
         </div>
 
-        {/* ✅ Navigation */}
         <nav ref={menuRef} className={`nav-links ${menuOpen ? "open" : ""}`}>
-          <Link to="/" onClick={() => setMenuOpen(false)}>
-            Home
+          <Link
+            to="/"
+            className={location.pathname === "/" ? "active" : ""}
+            onClick={() => setMenuOpen(false)}
+          >
+            Overview
           </Link>
           <Link to="/login" onClick={() => setMenuOpen(false)}>
-            Login
+            Log in
           </Link>
-          <Link to="/register" onClick={() => setMenuOpen(false)}>
-            Register
+          <Link
+            to="/register"
+            className="btn-register"
+            onClick={() => setMenuOpen(false)}
+          >
+            Get Started
           </Link>
         </nav>
       </div>

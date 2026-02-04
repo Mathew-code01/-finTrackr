@@ -1,6 +1,7 @@
 // src/components/AreaChart.jsx
 // src/components/AreaChart.jsx
 // src/components/AreaChart.jsx
+
 import React from "react";
 import {
   AreaChart as ReAreaChart,
@@ -12,24 +13,69 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
+import { FiDollarSign } from "react-icons/fi"; // Import the icon
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div
+        style={{
+          background: "var(--bg-glass)",
+          backdropFilter: "var(--glass-blur)",
+          padding: "12px",
+          border: "var(--border-on-dark)",
+          borderRadius: "var(--radius-pro)",
+          color: "var(--text-on-dark)",
+          boxShadow: "var(--shadow-soft)",
+        }}
+      >
+        <p
+          style={{
+            margin: "0 0 8px 0",
+            fontSize: "11px",
+            opacity: 0.6,
+            letterSpacing: "0.05em",
+          }}
+        >
+          {label.toUpperCase()}
+        </p>
+        {payload.map((p, i) => (
+          <p
+            key={i}
+            style={{
+              margin: "4px 0",
+              color: p.color,
+              fontWeight: 600,
+              fontSize: "14px",
+            }}
+          >
+            {p.name}: ${p.value.toLocaleString()}
+          </p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
 
 function AreaChart({ transactions, timeframe }) {
   const now = new Date();
   let data = [];
 
+  // Data processing logic
   if (timeframe === "daily") {
     const todayTx = transactions.filter(
-      (t) => new Date(t.date).toDateString() === now.toDateString()
+      (t) => new Date(t.date).toDateString() === now.toDateString(),
     );
     data = [
       {
         label: now.toLocaleDateString("en-US", { weekday: "short" }),
         income: todayTx
           .filter((t) => t.type === "income")
-          .reduce((sum, t) => sum + t.amount, 0),
+          .reduce((s, t) => s + t.amount, 0),
         expense: todayTx
           .filter((t) => t.type === "expense")
-          .reduce((sum, t) => sum + t.amount, 0),
+          .reduce((s, t) => s + t.amount, 0),
       },
     ];
   } else if (timeframe === "weekly") {
@@ -39,7 +85,7 @@ function AreaChart({ transactions, timeframe }) {
       const day = new Date(start);
       day.setDate(start.getDate() + i);
       const dayTx = transactions.filter(
-        (t) => new Date(t.date).toDateString() === day.toDateString()
+        (t) => new Date(t.date).toDateString() === day.toDateString(),
       );
       return {
         label: day.toLocaleDateString("en-US", { weekday: "short" }),
@@ -52,28 +98,28 @@ function AreaChart({ transactions, timeframe }) {
       };
     });
   } else if (timeframe === "monthly") {
-    const months = Array.from({ length: 12 }, (_, i) => i);
-    data = months.map((m) => {
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    data = months.map((m, i) => {
       const monthTx = transactions.filter(
         (t) =>
-          new Date(t.date).getMonth() === m &&
-          new Date(t.date).getFullYear() === now.getFullYear()
+          new Date(t.date).getMonth() === i &&
+          new Date(t.date).getFullYear() === now.getFullYear(),
       );
       return {
-        label: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec",
-        ][m],
+        label: m,
         income: monthTx
           .filter((t) => t.type === "income")
           .reduce((s, t) => s + t.amount, 0),
@@ -82,27 +128,8 @@ function AreaChart({ transactions, timeframe }) {
           .reduce((s, t) => s + t.amount, 0),
       };
     });
-  } else if (timeframe === "yearly") {
-    const years = Array.from(
-      new Set(transactions.map((t) => new Date(t.date).getFullYear()))
-    );
-    data = years.map((y) => {
-      const yearTx = transactions.filter(
-        (t) => new Date(t.date).getFullYear() === y
-      );
-      return {
-        label: y,
-        income: yearTx
-          .filter((t) => t.type === "income")
-          .reduce((s, t) => s + t.amount, 0),
-        expense: yearTx
-          .filter((t) => t.type === "expense")
-          .reduce((s, t) => s + t.amount, 0),
-      };
-    });
   }
 
-  // ✅ Only show chart if there’s real data (income or expense > 0)
   const hasData = data.some((d) => d.income > 0 || d.expense > 0);
 
   return (
@@ -116,39 +143,91 @@ function AreaChart({ transactions, timeframe }) {
       }}
     >
       {!hasData ? (
-        <p style={{ color: "#888", fontStyle: "italic" }}>No data yet</p>
+        /* --- PROFESSIONAL PLACEHOLDER --- */
+        <div className="chart-placeholder">
+          <div style={{ opacity: 0.2, marginBottom: "12px", display: "flex", justifyContent: "center"}}>
+            <FiDollarSign size={40} color="var(--text-on-dark)" />
+          </div>
+          <p
+            style={{
+              fontSize: "11px",
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              color: "var(--text-muted-on-dark)",
+              fontWeight: 600,
+            }}
+          >
+            Awaiting Financial Data
+          </p>
+        </div>
       ) : (
         <ResponsiveContainer width="100%" height={300}>
           <ReAreaChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-            <XAxis dataKey="label" />
-            <YAxis />
-            <Tooltip formatter={(v) => `$${v.toFixed(2)}`} />
-            <Legend />
+            <defs>
+              <linearGradient id="incomeGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor="var(--color-success)"
+                  stopOpacity={0.3}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="var(--color-success)"
+                  stopOpacity={0}
+                />
+              </linearGradient>
+              <linearGradient id="expenseGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor="var(--color-danger)"
+                  stopOpacity={0.3}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="var(--color-danger)"
+                  stopOpacity={0}
+                />
+              </linearGradient>
+            </defs>
+            <CartesianGrid
+              strokeDasharray="3 3"
+              vertical={false}
+              stroke="rgba(255,255,255,0.05)"
+            />
+            <XAxis
+              dataKey="label"
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: "var(--text-muted-on-dark)", fontSize: 11 }}
+            />
+            <YAxis hide />
+            <Tooltip
+              content={<CustomTooltip />}
+              cursor={{ stroke: "var(--border-on-dark)", strokeWidth: 1 }}
+            />
+            <Legend
+              iconType="circle"
+              wrapperStyle={{
+                paddingTop: "20px",
+                color: "var(--text-on-dark)",
+              }}
+            />
             <Area
+              name="Inbound"
               type="monotone"
               dataKey="income"
-              stackId="1"
-              stroke="#22c55e"
+              stroke="var(--color-success)"
+              fillOpacity={1}
               fill="url(#incomeGradient)"
             />
             <Area
+              name="Outbound"
               type="monotone"
               dataKey="expense"
-              stackId="1"
-              stroke="#ef4444"
+              stroke="var(--color-danger)"
+              fillOpacity={1}
               fill="url(#expenseGradient)"
             />
-            <defs>
-              <linearGradient id="incomeGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#22c55e" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#22c55e" stopOpacity={0.1} />
-              </linearGradient>
-              <linearGradient id="expenseGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#ef4444" stopOpacity={0.1} />
-              </linearGradient>
-            </defs>
           </ReAreaChart>
         </ResponsiveContainer>
       )}

@@ -5,24 +5,21 @@
 // src/components/AppHeader.jsx
 // src/components/AppHeader.jsx
 // src/components/AppHeader.jsx
-// src/components/AppHeader.jsx
-// src/components/AppHeader.jsx
-// src/components/AppHeader.jsx
-// src/components/AppHeader.jsx
-// src/components/AppHeader.jsx
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  FaBars,
-  FaTimes,
-  FaSearch,
-  FaBell,
-  FaUserCircle,
-  FaChevronDown,
-} from "react-icons/fa";
+  FiMenu,
+  FiX,
+  FiSearch,
+  FiBell,
+  FiUser,
+  FiChevronDown,
+  FiLogOut,
+  FiSettings,
+} from "react-icons/fi";
 import "../styles/AppHeader.css";
 import { useNotifications } from "../hooks/useNotifications";
-import { useAuth } from "../hooks/useAuth"; // ✅ import auth context
+import { useAuth } from "../hooks/useAuth";
 import Logo from "./Logo";
 
 function AppHeader({
@@ -37,9 +34,8 @@ function AppHeader({
   const notifDropdownRef = useRef(null);
 
   const { notifications, clearNotifications } = useNotifications();
-  const { logout } = useAuth(); // ✅ get logout from context
+  const { logout } = useAuth();
   const timeframes = ["Daily", "Weekly", "Monthly", "Yearly"];
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,15 +43,13 @@ function AppHeader({
       if (
         userDropdownRef.current &&
         !userDropdownRef.current.contains(event.target)
-      ) {
+      )
         setMenuOpen(false);
-      }
       if (
         notifDropdownRef.current &&
         !notifDropdownRef.current.contains(event.target)
-      ) {
+      )
         setNotifOpen(false);
-      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -63,125 +57,106 @@ function AppHeader({
 
   return (
     <header className="app-header">
-      {/* Mobile Menu toggle */}
-      <button className="menu-btn" onClick={onToggleSidebar}>
-        {isSidebarOpen ? <FaTimes /> : <FaBars />}
-      </button>
-
-      {/* ✅ Brand logo */}
-      <div className="header-logo">
-        {/* <Logo /> */}
-        <span className="header-subtitle hide-on-mobile">Dashboard</span>
-      </div>
-
-      {/* Desktop: Pill-style selector */}
-      <div className="timeframe-dropdown hide-on-mobile">
-        {timeframes.map((tf) => {
-          const lower = tf.toLowerCase();
-          return (
-            <span
-              key={tf}
-              className={`timeframe-pill ${
-                selectedTimeframe === lower ? "active" : ""
-              }`}
-              onClick={() => onTimeframeChange(lower)}
-            >
-              {tf}
-            </span>
-          );
-        })}
-      </div>
-
-      {/* Mobile: Native select */}
-      <div className="timeframe-dropdown show-on-mobile">
-        <select
-          value={selectedTimeframe}
-          onChange={(e) => onTimeframeChange(e.target.value)}
-          className="timeframe-select"
+      <div className="header-left">
+        {/* Toggle Sidebar - Visible only on mobile/tablet */}
+        <button
+          className="menu-btn hide-on-desktop"
+          onClick={onToggleSidebar}
+          aria-label="Toggle Sidebar"
         >
-          {timeframes.map((tf) => (
-            <option key={tf} value={tf.toLowerCase()}>
-              {tf}
-            </option>
-          ))}
-        </select>
+          {isSidebarOpen ? <FiX /> : <FiMenu />}
+        </button>
+
+        <div className="header-brand">
+          <Logo />
+          <span className="brand-divider hide-on-mobile">/</span>
+          <span className="header-context hide-on-mobile">Intelligence</span>
+        </div>
       </div>
 
-      {/* Search bar */}
-      <div className="header-search hide-on-mobile">
-        <FaSearch className="search-icon" />
-        <input type="text" placeholder="Search transactions..." />
+      <div className="header-center hide-on-tablet">
+        <div className="timeframe-group">
+          {timeframes.map((tf) => {
+            const lower = tf.toLowerCase();
+            return (
+              <button
+                key={tf}
+                className={`tf-btn ${selectedTimeframe === lower ? "active" : ""}`}
+                onClick={() => onTimeframeChange(lower)}
+              >
+                {tf}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Right side actions */}
-      <div className="header-actions">
-        {/* 🔔 Notifications */}
-        <div
-          className="header-bell hide-on-mobile"
-          ref={notifDropdownRef}
-          onClick={() => setNotifOpen((prev) => !prev)}
-        >
-          <FaBell />
-          {notifications.length > 0 && (
-            <span className="badge">{notifications.length}</span>
-          )}
-
-          {notifOpen && (
-            <div className="notif-dropdown">
-              <ul>
-                {notifications.length > 0 ? (
-                  notifications.map((n) => <li key={n.id}>{n.message}</li>)
-                ) : (
-                  <li className="empty">No notifications</li>
-                )}
-              </ul>
-              {notifications.length > 0 && (
-                <button className="clear-btn" onClick={clearNotifications}>
-                  Clear all
-                </button>
-              )}
-            </div>
-          )}
+      <div className="header-right">
+        <div className="search-wrapper hide-on-mobile">
+          <FiSearch className="search-icon" />
+          <input type="text" placeholder="Search systems..." />
         </div>
 
-        {/* 👤 User dropdown */}
-        <div
-          className="header-user"
-          ref={userDropdownRef}
-          onClick={() => setMenuOpen((prev) => !prev)}
-        >
-          <FaUserCircle className="user-icon" />
-          <FaChevronDown className={`chevron ${menuOpen ? "open" : ""}`} />
+        <div className="action-icons">
+          <div className="notif-wrapper" ref={notifDropdownRef}>
+            <button
+              className="icon-btn"
+              onClick={() => setNotifOpen(!notifOpen)}
+            >
+              <FiBell />
+              {notifications.length > 0 && <span className="notif-dot"></span>}
+            </button>
 
-          {menuOpen && (
-            <ul className="user-dropdown">
-              <li
-                onClick={() => {
-                  setMenuOpen(false);
-                  navigate("/profile");
-                }}
-              >
-                Profile
-              </li>
-              <li
-                onClick={() => {
-                  setMenuOpen(false);
-                  navigate("/settings");
-                }}
-              >
-                Settings
-              </li>
-              <li
-                onClick={() => {
-                  logout(); // ✅ call context logout
-                  setMenuOpen(false);
-                  navigate("/login"); // redirect to login
-                }}
-              >
-                Logout
-              </li>
-            </ul>
-          )}
+            {notifOpen && (
+              <div className="notif-panel glass-panel">
+                <div className="panel-header">System Alerts</div>
+                <div className="panel-body">
+                  {notifications.length > 0 ? (
+                    notifications.map((n) => (
+                      <div key={n.id} className="notif-item">
+                        {n.message}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="empty-state">Secure. No new alerts.</div>
+                  )}
+                </div>
+                {notifications.length > 0 && (
+                  <button className="clear-all" onClick={clearNotifications}>
+                    Clear All
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="user-wrapper" ref={userDropdownRef}>
+            <button
+              className="profile-trigger"
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              <div className="avatar-placeholder">
+                <FiUser />
+              </div>
+              <FiChevronDown
+                className={`chevron hide-on-mobile ${menuOpen ? "open" : ""}`}
+              />
+            </button>
+
+            {menuOpen && (
+              <ul className="user-menu glass-panel">
+                <li onClick={() => navigate("/profile")}>
+                  <FiUser /> Profile
+                </li>
+                <li onClick={() => navigate("/settings")}>
+                  <FiSettings /> Settings
+                </li>
+                <li className="logout-item" onClick={logout}>
+                  <FiLogOut /> Sign Out
+                </li>
+              </ul>
+            )}
+          </div>
         </div>
       </div>
     </header>

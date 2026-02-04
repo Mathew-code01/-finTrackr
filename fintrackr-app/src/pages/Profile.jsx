@@ -5,11 +5,8 @@
 // src/pages/Profile.jsx
 // src/pages/Profile.jsx
 // src/pages/Profile.jsx
-// src/pages/Profile.jsx
-// src/pages/Profile.jsx
-// src/pages/Profile.jsx
 import React, { useState, useEffect } from "react";
-import { FiUser, FiMail, FiLock, FiLogOut } from "react-icons/fi";
+import { FiUser, FiMail, FiLock, FiLogOut, FiCamera } from "react-icons/fi";
 import AppHeader from "../components/AppHeader.jsx";
 import Sidebar from "../components/Sidebar.jsx";
 import AppFooter from "../components/AppFooter.jsx";
@@ -33,7 +30,6 @@ function Profile() {
   const [successMsg, setSuccessMsg] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // ✅ Load user from localStorage on mount
   useEffect(() => {
     const storedUser = getFromStorage(STORAGE_KEYS.USER);
     if (storedUser) {
@@ -46,7 +42,6 @@ function Profile() {
     }
   }, []);
 
-  // --- Handlers ---
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     setForm((prev) => ({
@@ -74,21 +69,17 @@ function Profile() {
       return;
     }
 
-    // ✅ Get current user from session
     const currentUser = getFromStorage(STORAGE_KEYS.USER);
     if (!currentUser) return;
 
-    // ✅ Create updated user object
     const updatedUser = {
       ...currentUser,
       name: form.name,
       email: form.email,
       avatar: form.avatar,
-      // Only update password if entered
       ...(form.password ? { password: form.password } : {}),
     };
 
-    // ✅ Update session user (but don’t store password here for security)
     const sessionUser = {
       id: updatedUser.id,
       name: updatedUser.name,
@@ -97,158 +88,170 @@ function Profile() {
     };
     saveToStorage(STORAGE_KEYS.USER, sessionUser);
 
-    // ✅ Update inside fintrackr_users too (with password if set)
     const allUsers = getFromStorage(STORAGE_KEYS.USERS, []);
     const updatedUsers = allUsers.map((u) =>
-      u.id === currentUser.id ? { ...u, ...updatedUser } : u
+      u.id === currentUser.id ? { ...u, ...updatedUser } : u,
     );
     saveToStorage(STORAGE_KEYS.USERS, updatedUsers);
 
-    // ✅ Reset password fields after saving
     setForm((prev) => ({ ...prev, password: "", confirmPassword: "" }));
-
     setErrors({});
-    setSuccessMsg("Profile updated successfully!");
-    console.log("Updated Profile:", updatedUser);
+    setSuccessMsg("Profile updated successfully.");
   };
-
-
 
   const handleLogout = () => {
     removeFromStorage(STORAGE_KEYS.USER);
-    window.location.href = "/login"; // redirect to login
+    window.location.href = "/login";
   };
 
   return (
     <div
-      className={`profile-page-container ${sidebarOpen ? "sidebar-open" : ""}`}
+      className={`fintrack-profile-v2-root ${sidebarOpen ? "sidebar-open" : ""}`}
     >
-      {/* Header + Sidebar */}
       <AppHeader
         isSidebarOpen={sidebarOpen}
         onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
       />
+
       {sidebarOpen && (
         <div
-          className="sidebar-overlay"
+          className="fintrack-overlay"
           onClick={() => setSidebarOpen(false)}
         />
       )}
+
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      {/* Main */}
-      <main className="profile-page-main">
-        {/* Banner */}
-        <header className="profile-banner">
-          <h1>
-            <FiUser /> My Profile
-          </h1>
-          <p>Update your details and password.</p>
+      <main className="fintrack-profile-v2-main">
+        <header className="fintrack-profile-v2-hero">
+          <h1 className="fintrack-profile-v2-title">Account Settings</h1>
+          <p className="fintrack-profile-v2-subtitle">
+            Manage your digital identity and security.
+          </p>
         </header>
 
-        <div className="profile-layout">
-          {/* Profile Card */}
-          <aside className="profile-card">
-            <div className="avatar-section">
-              {form.avatar ? (
-                <img
-                  src={
-                    form.avatar instanceof File
-                      ? URL.createObjectURL(form.avatar)
-                      : form.avatar
-                  }
-                  alt="Avatar Preview"
-                  className="avatar-img"
-                />
-              ) : (
-                <div className="avatar-placeholder">Upload</div>
-              )}
-              <label className="upload-btn">
-                Change Avatar
-                <input
-                  type="file"
-                  name="avatar"
-                  accept="image/*"
-                  onChange={handleChange}
-                  hidden
-                />
-              </label>
+        <div className="fintrack-profile-v2-content-grid">
+          {/* Identity Card */}
+          <aside className="fintrack-profile-v2-card-identity">
+            <div className="fintrack-profile-v2-avatar-wrapper">
+              <div className="fintrack-profile-v2-avatar-circle">
+                {form.avatar ? (
+                  <img
+                    src={
+                      form.avatar instanceof File
+                        ? URL.createObjectURL(form.avatar)
+                        : form.avatar
+                    }
+                    alt="Profile"
+                    className="fintrack-profile-v2-img"
+                  />
+                ) : (
+                  <FiUser className="fintrack-profile-v2-placeholder-icon" />
+                )}
+                <label className="fintrack-profile-v2-avatar-edit">
+                  <FiCamera />
+                  <input
+                    type="file"
+                    name="avatar"
+                    accept="image/*"
+                    onChange={handleChange}
+                    hidden
+                  />
+                </label>
+              </div>
             </div>
 
-            <h2>{form.name || "Your Name"}</h2>
-            <p>{form.email || "your@email.com"}</p>
+            <div className="fintrack-profile-v2-user-info">
+              <h2>{form.name || "Member"}</h2>
+              <p>{form.email || "Verification Pending"}</p>
+            </div>
 
-            <button className="logout-btn" onClick={handleLogout}>
-              <FiLogOut /> Log Out
+            <button
+              className="fintrack-profile-v2-logout"
+              onClick={handleLogout}
+            >
+              <FiLogOut /> <span>Sign Out</span>
             </button>
           </aside>
 
-          {/* Profile Form */}
-          <section className="profile-form-wrapper">
-            <form className="profile-form" onSubmit={handleSubmit}>
-              <div className="form-row">
-                <div className="input-group">
-                  <FiUser className="input-icon" />
+          {/* Security Form */}
+          <section className="fintrack-profile-v2-form-container">
+            <form className="fintrack-profile-v2-form" onSubmit={handleSubmit}>
+              <div className="fintrack-profile-v2-input-section">
+                <label className="fintrack-profile-v2-label">
+                  Personal Details
+                </label>
+                <div className="fintrack-profile-v2-input-group">
+                  <FiUser className="fintrack-profile-v2-icon" />
                   <input
                     type="text"
                     name="name"
                     value={form.name}
                     onChange={handleChange}
-                    placeholder="Enter your name"
+                    placeholder="Full Name"
                   />
                 </div>
-                {errors.name && <span className="error-msg">{errors.name}</span>}
-              </div>
+                {errors.name && (
+                  <span className="fintrack-profile-v2-error">
+                    {errors.name}
+                  </span>
+                )}
 
-              <div className="form-row">
-                <div className="input-group">
-                  <FiMail className="input-icon" />
+                <div className="fintrack-profile-v2-input-group">
+                  <FiMail className="fintrack-profile-v2-icon" />
                   <input
                     type="email"
                     name="email"
                     value={form.email}
                     onChange={handleChange}
-                    placeholder="Enter your email"
+                    placeholder="Email Address"
                   />
                 </div>
                 {errors.email && (
-                  <span className="error-msg">{errors.email}</span>
+                  <span className="fintrack-profile-v2-error">
+                    {errors.email}
+                  </span>
                 )}
               </div>
 
-              <div className="form-row">
-                <div className="input-group">
-                  <FiLock className="input-icon" />
+              <div className="fintrack-profile-v2-input-section">
+                <label className="fintrack-profile-v2-label">Security</label>
+                <div className="fintrack-profile-v2-input-group">
+                  <FiLock className="fintrack-profile-v2-icon" />
                   <input
                     type="password"
                     name="password"
                     value={form.password}
                     onChange={handleChange}
-                    placeholder="New password"
+                    placeholder="New Password"
                   />
                 </div>
-              </div>
 
-              <div className="form-row">
-                <div className="input-group">
-                  <FiLock className="input-icon" />
+                <div className="fintrack-profile-v2-input-group">
+                  <FiLock className="fintrack-profile-v2-icon" />
                   <input
                     type="password"
                     name="confirmPassword"
                     value={form.confirmPassword}
                     onChange={handleChange}
-                    placeholder="Confirm password"
+                    placeholder="Confirm New Password"
                   />
                 </div>
                 {errors.confirmPassword && (
-                  <span className="error-msg">{errors.confirmPassword}</span>
+                  <span className="fintrack-profile-v2-error">
+                    {errors.confirmPassword}
+                  </span>
                 )}
               </div>
 
-              <button type="submit" className="update-btn">
-                Save Changes
-              </button>
-              {successMsg && <p className="success-msg">{successMsg}</p>}
+              <div className="fintrack-profile-v2-footer">
+                <button type="submit" className="fintrack-profile-v2-submit">
+                  Apply Changes
+                </button>
+                {successMsg && (
+                  <p className="fintrack-profile-v2-success">{successMsg}</p>
+                )}
+              </div>
             </form>
           </section>
         </div>

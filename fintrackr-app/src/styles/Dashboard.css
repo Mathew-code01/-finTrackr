@@ -5,210 +5,393 @@
 /* src/styles/Dashboard.css */
 /* Dashboard Layout */
 /* src/styles/Dashboard.css */
+/* src/styles/Dashboard.css */
 
-/* --- Dashboard Layout --- */
+/* --- 1. CORE LAYOUT & GRID --- */
 .dashboard-page {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 280px 1fr; /* Sidebar | Main Dashboard */
+  grid-template-rows: 80px 1fr auto; /* Header | Content | Footer */
   min-height: 100vh;
-  background-color: var(--color-bg-light);
+  background: var(--bg-pure-white);
   font-family: var(--font-primary);
-  color: var(--color-text);
 }
 
+/* HEADER: Stretches across the top */
 .app-header {
+  grid-column: 1 / -1; 
+  grid-row: 1;
   position: sticky;
   top: 0;
-  z-index: 1300;
-  background: var(--color-card-bg);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: var(--border-light);
 }
 
-/* Body wrapper */
-.dashboard-body {
-  display: flex;
-  flex: 1;
-  width: 100%;
-  min-height: 0;
+/* SIDEBAR: Left column fixed-style */
+.sidebar {
+  grid-column: 1;
+  grid-row: 2 / 4; 
+  height: calc(100vh - 80px);
+  position: sticky;
+  top: 70px;
 }
 
 .dashboard-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: var(--spacing-lg);
-  margin-left: 240px;
+  grid-column: 2;
+  grid-row: 2;
+  overflow-x: hidden;
 }
 
-.dashboard-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xl);
-}
 
-/* --- Summary Cards --- */
-.summary-cards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-xl);
-}
-
-/* --- Charts Section --- */
-.charts-section {
-  margin-bottom: var(--spacing-xl);
-}
-
-/* Desktop Grid */
-.charts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: var(--spacing-lg);
-}
-
-/* Mobile Tabs */
-.charts-tabs {
-  display: none;
-  margin-bottom: var(--spacing-md);
-  overflow-x: auto;
-  padding-bottom: 0.5rem;
-}
-
-.charts-tabs::-webkit-scrollbar {
-  display: none;
-}
-
-.charts-tabs button {
-  background: var(--color-card-bg);
-  border: 1px solid var(--color-border);
-  padding: 0.6rem 1rem;
-  border-radius: var(--radius-md);
-  margin-right: 0.5rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: 500;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.charts-tabs button:hover {
-  background: var(--color-hover);
-}
-
-.charts-tabs button.active {
-  background: var(--color-primary);
-  color: var(--white);
-  border-color: var(--color-primary);
-}
-
-/* Chart Cards */
-.chart-card {
-  background: var(--color-card-bg);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-md);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-  min-height: 320px;
-  display: flex;
-  flex-direction: column;
-}
-
-.chart-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-}
-
-.chart-card h3 {
-  margin-bottom: var(--spacing-sm);
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.chart-card > div {
-  flex: 1;
-  min-height: 240px;
-}
-
-/* Single chart view (mobile only) */
-.charts-single {
-  display: none;
-}
-
-/* --- Extra Widgets --- */
-.extra-section.grid-layout {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--spacing-lg);
-  margin-top: var(--spacing-lg);
-}
-
-@media (min-width: 900px) {
-  .extra-section.grid-layout {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* --- Responsive --- */
-@media (max-width: 768px) {
-  .dashboard-body {
-    flex-direction: column;
-  }
-
-  .dashboard-main {
-    margin-left: 0;
-  }
-
-  .summary-cards {
-    flex-direction: column;
-  }
-
-  .charts-grid {
-    display: none; /* hide grid on mobile */
-  }
-
-  .charts-tabs {
-    display: flex; /* show tabs */
-  }
-
-  .charts-single {
-    display: block; /* show one chart */
-  }
-
-  .chart-card {
-    min-height: 280px;
-    padding: var(--spacing-sm);
-  }
-
-  .chart-card h3 {
-    font-size: 0.95rem;
-  }
-}
-
-/* Fix charts not showing on mobile */
-.chart-card > div {
-  flex: 1;
-  min-height: 240px;
+/* --- 2. ZEBRA RHYTHM & SPACING --- */
+.zebra-section {
+  padding: var(--section-padding) 0; /* Identical 120px padding */
   width: 100%;
 }
 
-/* Ensure charts resize correctly */
-@media (max-width: 768px) {
-  .chart-card > div {
-    min-height: 300px; /* increase for readability */
+.section-white { background-color: var(--bg-pure-white); color: var(--text-main); }
+.section-dark { background-color: var(--bg-deep-obsidian); color: var(--text-on-dark); }
+
+.container-elegant {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+/* --- 3. TYPOGRAPHY & HERO --- */
+.hero-centered {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto var(--space-xl);
+}
+
+.eyebrow {
+  display: block;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  margin-bottom: var(--space-sm);
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+/* --- 4. DATA VISIBILITY FIXES --- */
+/* "All(9) Commercial(3)..." styling for high visibility */
+.transaction-filters {
+  display: flex;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  padding: 12px;
+  background: var(--bg-soft-gray); 
+  border-radius: var(--radius-pro);
+}
+
+.filter-btn {
+  color: var(--text-main) !important;
+  font-weight: 700 !important;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  opacity: 0.6;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.filter-btn.active {
+  color: var(--color-accent) !important;
+  opacity: 1;
+}
+
+  .two-column-grid, .active-chart-view {
+    display: grid !important;
+
+    gap: var(--space-lg);
+  }
+
+/* --- 5. GRID LOGIC (DESKTOP) --- */
+@media (min-width: 1025px) {
+  .summary-cards-minimal {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .two-column-grid, .active-chart-view {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+  }
+
+  .chart-wrapper {
+    display: block !important;
+    background: var(--bg-glass);
+    backdrop-filter: var(--glass-blur);
+    padding: var(--space-lg);
+    border-radius: var(--radius-pro);
+    border: var(--border-on-dark);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .chart-wrapper:hover {
+    transform: translateY(-5px);
+    border-color: var(--color-accent);
+  }
+
+  .dashboard-grid-sophisticated {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: var(--space-xl);
+  }
+}
+
+/* --- 6. MOBILE LOGIC (< 1024px) --- */
+@media (max-width: 1024px) {
+  .dashboard-page { grid-template-columns: 1fr; }
+  .dashboard-main, .app-footer { grid-column: 1; }
+
+  .sidebar {
+    position: fixed;
+   
+    z-index: 2000;
+    transform: translateX(-100%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .sidebar.open { transform: translateX(0); }
+
+  .summary-cards-minimal, .two-column-grid, .dashboard-grid-sophisticated {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .chart-wrapper { display: none; }
+  .chart-wrapper.is-active {
+    display: block;
+    animation: fadeIn 0.4s ease-out;
+  }
+
+  .zebra-section { padding: 80px 0; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* src/styles/Dashboard.css (Continued) */
+
+/* Sophisticated Headings */
+.elegant-heading-sm {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: var(--space-md);
+  text-transform: capitalize;
+}
+
+.elegant-small-heading {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  margin-bottom: var(--space-lg);
+}
+
+/* Eye-brow subheadings (Dark sections) */
+.eyebrow-dark {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--color-accent);
+  margin-bottom: var(--space-sm);
+}
+
+/* Minimalist Buttons */
+.btn-primary-pro {
+  background: var(--color-accent);
+  color: #ffffff;
+  padding: 12px 24px;
+  border-radius: var(--radius-pro);
+  font-weight: 600;
+  font-size: 0.85rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.1);
+}
+
+.btn-primary-pro:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.25);
+  filter: brightness(1.1);
+}
+
+/* Filter Pills Navigation */
+.filter-pill-group {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.filter-pill {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-muted-on-dark);
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-pill.active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: white;
+}
+
+/* Card Container for Zebra Sections */
+.grid-item-card {
+  background: var(--bg-glass);
+  backdrop-filter: var(--glass-blur);
+  border: var(--border-on-dark);
+  border-radius: var(--radius-pro);
+ 
+  transition: border-color 0.4s ease;
+}
+
+.grid-item-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.widget-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+/* --- RESPONSIVE CARD LOGIC --- */
+
+@media (max-width: 1024px) {
+  /* Ensure cards stack and span full width */
+  .grid-item-card {
+    width: 100%;
+    margin-bottom: var(--space-md); /* Vertical breathing room between stacked cards */
+    padding: var(--space-md); /* Slightly tighter padding than desktop for mobile real-estate */
+    
+    /* Enhance the Glassmorphism for mobile screens */
+    backdrop-filter: blur(15px); 
+    -webkit-backdrop-filter: blur(15px);
+  }
+
+  /* Adjust the widget stack to respect the new vertical rhythm */
+  .widget-stack {
+    gap: var(--space-lg); /* Slightly tighter stack for mobile flow */
+  }
+
+  /* Typography adjustment inside cards for better legibility on small screens */
+  .grid-item-card .elegant-small-heading {
+    font-size: 0.8rem;
+    margin-bottom: var(--space-md);
+    text-align: left; /* Keep left-aligned for better mobile scanning */
+  }
+
+  /* Ensure interactive elements inside cards are touch-friendly (min 44px height) */
+  .grid-item-card button, 
+  .grid-item-card .filter-pill {
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* Extra Small Devices (Phones) */
+@media (max-width: 480px) {
+  .grid-item-card {
+    padding: var(--space-sm); /* Even tighter on very small screens */
+    border-radius: 10px; /* Sharper radius for smaller viewports looks more precise */
+  }
+  
+  .section-title {
+    font-size: 1.5rem; /* Scale down title so it doesn't wrap awkwardly */
+  }
+}
+
+/* --- SECTION 4 SPECIFIC RESPONSIVE FIX --- */
+
+/* Header alignment fix for Section 4 */
+.section-header-adaptive {
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column; /* Stacked by default for mobile-first */
+  align-items: flex-start;
+}
+
+@media (min-width: 1025px) {
+  .section-header-adaptive {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+}
+
+/* Force Section 4 Grid to stack on Mobile */
+@media (max-width: 1024px) {
+  /* This ensures Section 4's grid actually becomes 1 column */
+  .two-column-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important; 
+    gap: var(--space-lg);
+  }
+
+  /* Section 4 Card spacing */
+  .grid-item-card {
+    margin-bottom: 0; /* Let grid gap handle the spacing */
+    overflow: hidden; /* Prevent horizontal scroll inside cards */
+  }
+  
+  /* If TransactionForm or Goals have internal wide tables/inputs, force them to wrap */
+  .grid-item-card form, 
+  .grid-item-card .goal-container {
+    display: flex;
+    flex-direction: column;
     width: 100%;
   }
 }
 
-/* Make sure mobile charts stretch fully */
-.charts-single .chart-card {
-  width: 100%;
-  height: auto;
+/* --- Dashboard Automation Status --- */
+.automation-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 6px 14px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.7rem;
+  color: var(--text-muted-on-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: var(--space-md);
 }
 
-.charts-single .chart-card > div {
-  width: 100%;
-  height: 100%;
-  min-height: 280px;
+.dot-active {
+  width: 6px;
+  height: 6px;
+  background: #10b981; /* Professional Emerald Green */
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
 }

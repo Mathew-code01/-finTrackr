@@ -2,16 +2,12 @@
 // src/pages/Home.jsx
 
 // src/pages/Home.jsx
+// src/pages/Home.jsx
 import React from "react";
 import { Link } from "react-router-dom";
-import {
-  FiTrendingUp,
-  FiPieChart,
-  FiCalendar,
-  FiCloud,
-  FiUserCheck,
-  FiPlusCircle,
-  FiBarChart2,
+import { 
+  FiTrendingUp, FiPieChart, FiLayers, FiZap, 
+  FiLock, FiDatabase, FiCpu, FiCheck 
 } from "react-icons/fi";
 import PublicHeader from "../components/PublicHeader.jsx";
 import PublicFooter from "../components/PublicFooter.jsx";
@@ -22,107 +18,171 @@ function Home() {
     <div className="home-page">
       <PublicHeader />
 
-      {/* Hero Section */}
-      <main className="home-content">
-        <h2>Take Control of Your Finances</h2>
-        <p>
-          Track your income and expenses with ease. Visualize where your money
-          goes and make smarter financial decisions.
-        </p>
-        <Link to="/register" className="get-started-btn">
-          Get Started
-        </Link>
-      </main>
-
-      {/* Features Section */}
-      <section className="features-section">
-        <h3>Why Choose FinTrackr?</h3>
-        <div className="features-grid">
-          <div className="feature-card">
-            <FiTrendingUp className="feature-icon" />
-            <h4>Track Transactions</h4>
-            <p>
-              Easily add income and expenses with categories, dates, and notes.
+      {/* --- SECTION 1: HERO (White) --- */}
+      <section className="section-white hero-section">
+        <div className="container">
+          <div className="hero-content">
+            <span className="eyebrow">Visual Excellence Built for Impact</span>
+            <h1 className="hero-title">
+              Master your capital with <br /> <span>surgical precision.</span>
+            </h1>
+            <p className="hero-subtitle">
+              FinTrackr provides a high-fidelity interface for tracking assets,
+              income, and expenses—stored entirely in your browser.
             </p>
-          </div>
-          <div className="feature-card">
-            <FiPieChart className="feature-icon" />
-            <h4>Visual Insights</h4>
-            <p>
-              Pie charts and bar charts help you understand spending patterns.
-            </p>
-          </div>
-          <div className="feature-card">
-            <FiCalendar className="feature-icon" />
-            <h4>Smart Filters</h4>
-            <p>
-              View your finances by day, week, or month for better planning.
-            </p>
-          </div>
-          <div className="feature-card">
-            <FiCloud className="feature-icon" />
-            <h4>100% Free</h4>
-            <p>Store data locally or sync to the cloud — no hidden costs.</p>
+            <div className="hero-actions">
+              <Link to="/register" className="btn-solid">
+                Start Tracking
+              </Link>
+              <Link to="/login" className="btn-outline">
+                View Demo
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section className="how-it-works">
-        <h3>How It Works</h3>
-        <div className="steps-grid">
-          <div className="step-card">
-            <FiUserCheck className="step-icon" />
-            <h4>1. Create an Account</h4>
-            <p>Sign up for free in less than 1 minute.</p>
+      {/* --- SECTION 2: FEATURES (Deep Obsidian) --- */}
+      <section className="section-dark">
+        <div className="container">
+          <div className="section-header">
+            <span className="eyebrow">The Platform</span>
+            <h2 className="section-title">
+              Sophisticated tools for <br /> financial clarity.
+            </h2>
           </div>
-          <div className="step-card">
-            <FiPlusCircle className="step-icon" />
-            <h4>2. Add Transactions</h4>
-            <p>Log your income and expenses with categories.</p>
-          </div>
-          <div className="step-card">
-            <FiBarChart2 className="step-icon" />
-            <h4>3. See Insights</h4>
-            <p>Get clear visuals of where your money goes.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="testimonials">
-        <h3>What Our Users Say</h3>
-        <div className="testimonials-grid">
-          <div className="testimonial-card">
-            <p>
-              "FinTrackr made me realize how much I was overspending on food.
-              Now I save 20% every month!"
-            </p>
-            <h5>— Sarah K.</h5>
-          </div>
-          <div className="testimonial-card">
-            <p>
-              "Simple, clean, and effective. The charts help me stay on track
-              with my budget."
-            </p>
-            <h5>— James M.</h5>
-          </div>
-          <div className="testimonial-card">
-            <p>
-              "Finally a free finance app that does exactly what I need — no
-              fluff, just results."
-            </p>
-            <h5>— Anita R.</h5>
+          <div className="features-grid">
+            <div className="feature-card">
+              <FiTrendingUp className="feature-icon" />
+              <h4>Real-time Tracking</h4>
+              <p>
+                Log income and expenses with categorized precision. No lag, just
+                data.
+              </p>
+            </div>
+            <div className="feature-card">
+              <FiPieChart className="feature-icon" />
+              <h4>Visual Insights</h4>
+              <p>
+                Minimalist charts designed to highlight spending patterns
+                without the noise.
+              </p>
+            </div>
+            <div className="feature-card">
+              <FiLayers className="feature-icon" />
+              <h4>Asset Management</h4>
+              <p>
+                Organize multiple streams of income with an elegant, unified
+                dashboard.
+              </p>
+            </div>
+            <div className="feature-card">
+              <FiZap className="feature-icon" />
+              <h4>Instant Filters</h4>
+              <p>
+                Segment data by timeline or category with high-speed
+                performance.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Call To Action */}
-      <section className="cta-banner">
-        <h3>Ready to get started?</h3>
-        <Link to="/register" className="cta-btn">
-          Create Free Account
-        </Link>
+      {/* --- SECTION 3: HOW IT WORKS (White) --- */}
+      <section className="section-white">
+        <div className="container">
+          <div className="section-header">
+            <span className="eyebrow">Execution</span>
+            <h2 className="section-title">Simplicity in every step.</h2>
+          </div>
+          <div className="steps-container">
+            <div className="step-item">
+              <h4>Initialize</h4>
+              <p>
+                Create your private account in seconds with zero configuration
+                required.
+              </p>
+            </div>
+            <div className="step-item">
+              <h4>Input</h4>
+              <p>
+                Record your financial movement using our streamlined transaction
+                engine.
+              </p>
+            </div>
+            <div className="step-item">
+              <h4>Analyze</h4>
+              <p>
+                Review generated reports to optimize your future capital
+                allocation.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* --- SECTION 4: TESTIMONIALS (Deep Obsidian) --- */}
+      <section className="section-dark">
+        <div className="container">
+          <div className="section-header">
+            <span className="eyebrow">Recognition</span>
+            <h2 className="section-title">
+              Built for those who <br /> value precision.
+            </h2>
+          </div>
+          <div className="testimonials-grid">
+            <div className="testimonial-card">
+              <p>
+                "The cleanest finance UI I've used. No fluff, just results."
+              </p>
+              <span className="author">Alex Rivera — Fintech Analyst</span>
+            </div>
+            <div className="testimonial-card">
+              <p>
+                "Local storage integration makes this the most private way to
+                track wealth."
+              </p>
+              <span className="author">Sarah Chen — Lead Developer</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* --- SECTION 5: TRUST & SECURITY (White) --- */}
+      {/* --- SECTION 5: TRUST & SECURITY (White background, Boxed Card) --- */}
+      <section className="section-white security-section">
+        <div className="container">
+          <div className="security-inner-card">
+            <div className="security-text">
+              <span className="eyebrow">Privacy First</span>
+              <h2 className="section-title">
+                Your data stays <br /> exactly where it belongs.
+              </h2>
+              <p>
+                FinTrackr utilizes <strong>Local Storage</strong> technology.
+                Your financial history remains on your device, never hitting a
+                third-party server.
+              </p>
+              <ul className="trust-list">
+                <li>
+                  <FiCheck /> No Cloud Storage
+                </li>
+                <li>
+                  <FiCheck /> 100% Private
+                </li>
+                <li>
+                  <FiCheck /> No Data Mining
+                </li>
+                <li>
+                  <FiCheck /> Instant Backup
+                </li>
+              </ul>
+            </div>
+            <div className="security-visual">
+              <FiLock className="big-icon" />
+            </div>
+          </div>
+        </div>
       </section>
 
       <PublicFooter />

@@ -4,254 +4,309 @@
 /* src/styles/Profile.css */
 /* src/styles/Profile.css */
 /* src/styles/Profile.css */
-
-/* src/styles/Profile.css */
-/* src/styles/Profile.css */
-
-/* ---------- Page Container ---------- */
-.profile-page-container {
-  display: flex;
-  flex-direction: column;
+/* ---------- 1. Core Layout Structure ---------- */
+.fintrack-profile-v2-root {
+  display: grid;
+  /* Fixed sidebar space on desktop (280px), rest is flexible */
+  grid-template-columns: 280px 1fr;
   min-height: 100vh;
-  font-family: var(--font-primary, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif);
-  background-color: var(--color-bg-light, #f5f6fa);
-  transition: margin-left 0.3s ease;
+  background-color: var(--bg-soft-gray);
+  font-family: var(--font-primary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Overlay when sidebar is open on small screens */
-.sidebar-overlay {
+/* Mobile Overlay */
+.fintrack-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 900;
+  background: rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(4px);
+  z-index: 998;
 }
 
-/* ---------- Main Content ---------- */
-.profile-page-main {
-  flex: 1;
+/* ---------- 2. Main Content Area ---------- */
+.fintrack-profile-v2-main {
+  grid-column: 2;
+  padding: var(--space-xl) var(--space-lg);
   display: flex;
   flex-direction: column;
-  padding: clamp(1rem, 4vw, 2rem);
-  transition: margin-left 0.3s ease;
-}
-
-.profile-banner {
-  text-align: center;
-  margin-bottom: var(--spacing-lg);
-}
-
-.profile-banner h1 {
-  font-size: clamp(1.4rem, 2.5vw, 2rem);
-  color: var(--color-text);
-  margin-bottom: var(--spacing-xs);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-sm);
-}
-
-.profile-banner p {
-  color: var(--color-text-light);
-  font-size: clamp(0.85rem, 2vw, 1rem);
-}
-
-/* ---------- Layout ---------- */
-.profile-layout {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-lg);
-  max-width: 1000px;
+  align-items: center; /* Ensures centering on the vertical axis */
+  width: 100%;
+  max-width: var(--container-max-width);
   margin: 0 auto;
-  width: 100%;
-  justify-content: center;
 }
 
-/* ---------- Profile Card ---------- */
-.profile-card {
-  flex: 0.35;
-  background: var(--color-card-bg);
-  border-radius: var(--radius-lg);
-  padding: clamp(1rem, 3vw, 2rem);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+/* Hero Section - Centered Typography */
+.fintrack-profile-v2-hero {
   text-align: center;
-  min-width: 280px;
+  margin-bottom: var(--space-xl);
+  animation: fadeInDown 0.6s ease-out;
 }
 
-.avatar-section {
-  margin-bottom: var(--spacing-md);
+.fintrack-profile-v2-title {
+  font-size: clamp(1.8rem, 4vw, 2.25rem);
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: var(--letter-spacing-tight);
+  margin-bottom: var(--space-xs);
 }
 
-.avatar-img,
-.avatar-placeholder {
-  width: clamp(70px, 12vw, 100px);
-  height: clamp(70px, 12vw, 100px);
+.fintrack-profile-v2-subtitle {
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+/* ---------- 3. Content Grid ---------- */
+.fintrack-profile-v2-content-grid {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: var(--space-lg);
+  width: 100%;
+  align-items: start;
+}
+
+/* ---------- 4. Identity Card (Aside) ---------- */
+.fintrack-profile-v2-card-identity {
+  background: var(--bg-pure-white);
+  border: var(--border-light);
+  border-radius: var(--radius-pro);
+  padding: var(--space-lg);
+  text-align: center;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.fintrack-profile-v2-card-identity:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+}
+
+/* Avatar Styling */
+.fintrack-profile-v2-avatar-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-md);
+}
+
+.fintrack-profile-v2-avatar-circle {
+  position: relative;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
-  margin: 0 auto var(--spacing-sm);
-}
-
-.avatar-img {
-  object-fit: cover;
-  border: 2px solid var(--color-primary);
-}
-
-.avatar-placeholder {
-  background: var(--color-secondary);
+  background: var(--bg-soft-gray);
+  border: 2px solid var(--bg-pure-white);
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.05);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
-  color: var(--color-text-light);
 }
 
-.upload-btn {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  font-size: 0.85rem;
-  border-radius: var(--radius-md);
-  background-color: var(--color-primary);
-  color: #fff;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.upload-btn:hover {
-  background-color: var(--color-primary-dark);
-}
-
-.profile-card h2 {
-  font-size: 1.1rem;
-  margin: var(--spacing-sm) 0 4px;
-  color: var(--color-text);
-}
-
-.profile-card p {
-  font-size: 0.9rem;
-  color: var(--color-text-light);
-  margin-bottom: var(--spacing-md);
-}
-
-.logout-btn {
+.fintrack-profile-v2-img {
   width: 100%;
-  padding: 0.75rem;
-  background-color: var(--color-danger);
-  border: none;
-  border-radius: var(--radius-md);
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-.logout-btn:hover {
-  background-color: #d32f2f;
+.fintrack-profile-v2-placeholder-icon {
+  font-size: 3rem;
+  color: var(--text-muted);
 }
 
-/* ---------- Profile Form ---------- */
-.profile-form-wrapper {
-  flex: 0.65;
-  background: var(--color-card-bg);
-  border-radius: var(--radius-lg);
-  padding: clamp(1rem, 3vw, 2rem);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  min-width: 280px;
-}
-
-.profile-form .form-row {
-  margin-bottom: var(--spacing-md);
-}
-
-.input-group {
+.fintrack-profile-v2-avatar-edit {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: var(--color-accent);
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  background: var(--white);
-  border: 1px solid #ccc;
-  border-radius: var(--radius-md);
-  padding: 10px 12px;
-  gap: var(--spacing-sm);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  justify-content: center;
+  cursor: pointer;
+  border: 3px solid var(--bg-pure-white);
+  transition: transform 0.2s ease;
+}
+
+.fintrack-profile-v2-avatar-edit:hover {
+  transform: scale(1.1);
+  background: var(--color-accent-hover);
+}
+
+.fintrack-profile-v2-user-info h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.fintrack-profile-v2-user-info p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: var(--space-lg);
+}
+
+.fintrack-profile-v2-logout {
   width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid #fee2e2;
+  border-radius: var(--radius-pro);
+  color: var(--color-danger);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.input-group:focus-within {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(30, 136, 229, 0.15);
+.fintrack-profile-v2-logout:hover {
+  background: #fff1f2;
+  border-color: var(--color-danger);
 }
 
-.input-icon {
-  color: var(--color-text-light);
+/* ---------- 5. Form Styling ---------- */
+.fintrack-profile-v2-form-container {
+  background: var(--bg-pure-white);
+  border: var(--border-light);
+  border-radius: var(--radius-pro);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-soft);
 }
 
-.input-group input {
+.fintrack-profile-v2-input-section {
+  margin-bottom: var(--space-lg);
+}
+
+.fintrack-profile-v2-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--text-muted);
+  margin-bottom: var(--space-sm);
+}
+
+.fintrack-profile-v2-input-group {
+  display: flex;
+  align-items: center;
+  background: var(--bg-soft-gray);
+  border: 1px solid transparent;
+  border-radius: var(--radius-pro);
+  padding: 14px 18px;
+  gap: var(--space-md);
+  margin-bottom: var(--space-sm);
+  transition: all 0.3s ease;
+}
+
+.fintrack-profile-v2-input-group:focus-within {
+  background: var(--bg-pure-white);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 4px var(--color-accent-soft);
+}
+
+.fintrack-profile-v2-icon {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+}
+
+.fintrack-profile-v2-input-group input {
   flex: 1;
   border: none;
   outline: none;
-  font-size: 0.95rem;
-  color: var(--color-text);
   background: transparent;
+  font-size: 1rem;
+  color: var(--text-main);
+  font-family: var(--font-primary);
 }
 
-.error-msg {
-  display: block;
-  color: var(--color-danger);
-  font-size: 0.8rem;
-  margin-top: 4px;
-}
-
-.success-msg {
-  color: var(--color-success);
-  font-weight: 600;
-  margin-top: var(--spacing-sm);
-  text-align: center;
-}
-
-.update-btn {
+.fintrack-profile-v2-submit {
   width: 100%;
-  padding: 0.9rem;
-  background-color: var(--color-primary);
+  padding: 16px;
+  background: var(--color-accent);
+  color: white;
   border: none;
-  border-radius: var(--radius-md);
-  color: #fff;
-  font-weight: 600;
+  border-radius: var(--radius-pro);
+  font-weight: 700;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.3s ease;
 }
 
-.update-btn:hover {
-  background-color: var(--color-primary-dark);
+.fintrack-profile-v2-submit:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.2);
 }
 
-/* ---------- Responsive ---------- */
+.fintrack-profile-v2-error {
+  color: var(--color-danger);
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: block;
+  margin-bottom: var(--space-sm);
+}
 
-/* On tablets and below, stack layout */
-@media (max-width: 768px) {
-  .profile-layout {
-    flex-direction: column;
+.fintrack-profile-v2-success {
+  color: var(--color-success);
+  font-weight: 700;
+  text-align: center;
+  margin-top: var(--space-md);
+}
+
+/* ---------- 6. Responsive Logic ---------- */
+
+/* Desktop with Sidebar Hidden (Toggle mode) */
+@media (max-width: 1100px) {
+  .fintrack-profile-v2-root {
+    grid-template-columns: 1fr;
   }
-  .profile-card,
-  .profile-form-wrapper {
-    width: 100%;
+  .fintrack-profile-v2-main {
+    grid-column: 1;
   }
 }
 
-/* Sidebar adjustment for larger screens */
-@media (min-width: 769px) {
-  .profile-page-main {
-    margin-left: 250px; /* matches fixed sidebar width */
-  }
-  .profile-card {
-    max-width: 350px;
-  }
-  .profile-form-wrapper {
+/* Tablet - Stack the grid */
+@media (max-width: 900px) {
+  .fintrack-profile-v2-content-grid {
+    grid-template-columns: 1fr;
     max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .fintrack-profile-v2-hero {
+    margin-bottom: var(--space-lg);
   }
 }
 
-/* Phones */
+/* Mobile Adjustments */
 @media (max-width: 600px) {
-  .profile-banner h1 {
-    font-size: 1.3rem;
+  .fintrack-profile-v2-main {
+    padding: var(--space-md);
   }
-  .update-btn {
-    font-size: 0.9rem;
+  
+  .fintrack-profile-v2-card-identity, 
+  .fintrack-profile-v2-form-container {
+    padding: var(--space-md);
+  }
+
+  .fintrack-profile-v2-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* Animations */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

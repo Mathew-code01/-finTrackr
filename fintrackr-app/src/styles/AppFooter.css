@@ -2,25 +2,122 @@
 
 /* src/styles/AppFooter.css */
 
+/* src/styles/AppFooter.css */
+
 .app-footer {
-  text-align: center;
-  padding: var(--spacing-md);
-  background-color: var(--color-card-bg);
-  box-shadow: 0 -2px 6px rgba(0,0,0,0.05);
   margin-top: auto;
-  font-size: 0.9rem;
-  color: var(--color-text-light);
+  background: var(--bg-deep-obsidian);
+  /* High-Blur Glassmorphism Effect */
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-top: var(--border-on-dark);
+  padding: var(--space-lg) 0;
   font-family: var(--font-primary);
+  position: relative;
+  z-index: 10;
 }
 
-.app-footer a {
-  color: var(--color-primary);
-  text-decoration: none;
+.footer-container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+/* --- TEXT STYLES --- */
+.copyright {
+  font-size: 0.85rem;
+  color: var(--text-muted-on-dark);
+  letter-spacing: var(--letter-spacing-wide);
   font-weight: 500;
-  transition: color 0.3s ease;
 }
 
-.app-footer a:hover {
-  color: var(--color-primary-dark);
-  text-decoration: underline;
+.brand-accent {
+  color: var(--text-on-dark);
+  font-weight: 700;
+}
+
+.separator {
+  margin: 0 var(--space-sm);
+  opacity: 0.3;
+}
+
+/* --- SECURITY BADGE --- */
+.security-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 6px 16px;
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text-muted-on-dark);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.shield-icon {
+  color: var(--color-success);
+  font-size: 0.9rem;
+}
+
+/* --- NAVIGATION --- */
+.footer-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.footer-link {
+  color: var(--text-muted-on-dark);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.footer-link:hover {
+  color: var(--text-on-dark);
+  transform: translateY(-1px);
+}
+
+.link-icon {
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+.status-link {
+  color: var(--color-accent);
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 992px) {
+  .hide-on-mobile {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-md);
+  }
+
+  .footer-nav {
+    gap: var(--space-md);
+    justify-content: center;
+  }
+
+  .app-footer {
+    padding: var(--space-lg) 0;
+  }
 }
