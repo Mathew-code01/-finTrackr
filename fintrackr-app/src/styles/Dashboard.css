@@ -264,10 +264,10 @@
 
 /* Card Container for Zebra Sections */
 .grid-item-card {
-  background: var(--bg-glass);
+  /* background: var(--bg-glass); */
   backdrop-filter: var(--glass-blur);
-  border: var(--border-on-dark);
-  border-radius: var(--radius-pro);
+  /* border: var(--border-on-dark);
+  border-radius: var(--radius-pro); */
  
   transition: border-color 0.4s ease;
 }
@@ -289,7 +289,7 @@
   .grid-item-card {
     width: 100%;
     margin-bottom: var(--space-md); /* Vertical breathing room between stacked cards */
-    padding: var(--space-md); /* Slightly tighter padding than desktop for mobile real-estate */
+    /* padding: var(--space-md); Slightly tighter padding than desktop for mobile real-estate */
     
     /* Enhance the Glassmorphism for mobile screens */
     backdrop-filter: blur(15px); 
@@ -321,8 +321,8 @@
 /* Extra Small Devices (Phones) */
 @media (max-width: 480px) {
   .grid-item-card {
-    padding: var(--space-sm); /* Even tighter on very small screens */
-    border-radius: 10px; /* Sharper radius for smaller viewports looks more precise */
+    /* padding: var(--space-sm); Even tighter on very small screens */
+    /* border-radius: 10px; Sharper radius for smaller viewports looks more precise */
   }
   
   .section-title {
@@ -394,4 +394,45 @@
   background: #10b981; /* Professional Emerald Green */
   border-radius: 50%;
   box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+/* --- Master Expansion Layout Styles --- */
+
+/* Vertical stack for the whole section */
+.layout-master-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl); /* Maintains identical section padding rhythm */
+}
+
+/* Force ledger to be spacious */
+.layout-ledger-expansion {
+  width: 100%;
+  padding: var(--space-lg);
+  background: var(--bg-pure-white);
+  border: 1px solid var(--bg-soft-gray);
+  overflow-x: auto;
+}
+
+/* The 2-2-1 Grid Logic */
+.layout-widget-grid-sub {
+  display: grid;
+  grid-template-columns: 1fr; /* Mobile stacks vertically */
+  gap: var(--space-lg);
+}
+
+/* Big Screen Adjustment (2 columns for first row, 1 for second) */
+@media (min-width: 1025px) {
+  .layout-widget-grid-sub {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .layout-span-footer-widget {
+    grid-column: 1 / -1; /* Makes "Upcoming Bills" take the full width below the two widgets */
+  }
+}
+
+/* Spacing fix for the small heading */
+.layout-full-width-top .elegant-small-heading {
+  margin-bottom: var(--space-md);
 }

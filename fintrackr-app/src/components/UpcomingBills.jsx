@@ -3,8 +3,10 @@
 // src/components/UpcomingBills.jsx
 // src/components/UpcomingBills.jsx
 // src/components/UpcomingBills.jsx
+// src/components/UpcomingBills.jsx
+// src/components/UpcomingBills.jsx
 import React, { useState } from "react";
-import { FiCalendar, FiPlus, FiX } from "react-icons/fi";
+import { FiCalendar, FiPlus, FiX, FiActivity } from "react-icons/fi";
 import "../styles/UpcomingBills.css";
 
 function UpcomingBills({ bills = [], onAddBill, onDeleteBill }) {
@@ -19,48 +21,69 @@ function UpcomingBills({ bills = [], onAddBill, onDeleteBill }) {
   };
 
   return (
-    <div className="bills-widget">
-      <h4 className="widget-label">Liability Ledger</h4>
+    <div className="ft-ledger-container">
+      <header className="ft-ledger-header">
+        <div className="ft-ledger-title-group">
+          <FiActivity className="ft-ledger-icon-accent" />
+          <h4 className="ft-ledger-label">Liability Ledger</h4>
+        </div>
+        <p className="ft-ledger-subtitle">Institutional Tracking of Upcoming Obligations</p>
+      </header>
       
-      <form className="bill-minimal-form" onSubmit={handleSubmit}>
-        <input 
-          className="input-underlined" 
-          placeholder="Bill" 
-          value={form.name}
-          onChange={(e) => setForm({...form, name: e.target.value})}
-        />
-        <input 
-          className="input-underlined" 
-          type="number" 
-          placeholder="$" 
-          value={form.amount}
-          onChange={(e) => setForm({...form, amount: e.target.value})}
-        />
-        <input 
-          className="input-underlined" 
-          type="date"
-          value={form.due}
-          onChange={(e) => setForm({...form, due: e.target.value})}
-        />
-        <button type="submit" className="add-bill-circle"><FiPlus /></button>
+      <form className="ft-ledger-form" onSubmit={handleSubmit}>
+        <div className="ft-ledger-input-grid">
+          <input 
+            className="ft-ledger-input-line" 
+            placeholder="Counterparty / Service" 
+            value={form.name}
+            onChange={(e) => setForm({...form, name: e.target.value})}
+            required
+          />
+          <input 
+            className="ft-ledger-input-line" 
+            type="number" 
+            placeholder="0.00" 
+            value={form.amount}
+            onChange={(e) => setForm({...form, amount: e.target.value})}
+            required
+          />
+          <input 
+            className="ft-ledger-input-line ft-ledger-date-picker" 
+            type="date"
+            value={form.due}
+            onChange={(e) => setForm({...form, due: e.target.value})}
+            required
+          />
+        </div>
+        <button type="submit" className="ft-ledger-submit-btn">
+          <FiPlus /> <span>Commit Entry</span>
+        </button>
       </form>
 
-      <div className="bill-stack">
-        {bills.map((bill) => {
-          const isDueSoon = (new Date(bill.due) - today) / (86400000) <= 7;
-          return (
-            <div key={bill.id} className={`bill-card ${isDueSoon ? 'urgent' : ''}`}>
-              <div className="bill-meta">
-                <span className="bill-name">{bill.name}</span>
-                <span className="bill-date"><FiCalendar /> {new Date(bill.due).toLocaleDateString()}</span>
+      <div className="ft-ledger-stack">
+        {bills.length === 0 ? (
+          <div className="ft-ledger-empty">No active liabilities recorded.</div>
+        ) : (
+          bills.map((bill) => {
+            const isDueSoon = (new Date(bill.due) - today) / (86400000) <= 7;
+            return (
+              <div key={bill.id} className={`ft-ledger-card ${isDueSoon ? 'ft-is-urgent' : ''}`}>
+                <div className="ft-ledger-meta">
+                  <span className="ft-ledger-name">{bill.name}</span>
+                  <span className="ft-ledger-date">
+                    <FiCalendar /> {new Date(bill.due).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                  </span>
+                </div>
+                <div className="ft-ledger-finance">
+                  <span className="ft-ledger-amt">${bill.amount.toLocaleString()}</span>
+                  <button className="ft-ledger-del" onClick={() => onDeleteBill(bill.id)}>
+                    <FiX />
+                  </button>
+                </div>
               </div>
-              <div className="bill-actions">
-                <span className="bill-amt">${bill.amount}</span>
-                <button className="bill-del" onClick={() => onDeleteBill(bill.id)}><FiX /></button>
-              </div>
-            </div>
-          );
-        })}
+            );
+          })
+        )}
       </div>
     </div>
   );

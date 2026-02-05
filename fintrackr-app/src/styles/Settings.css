@@ -187,6 +187,10 @@
   transition: all 0.2s ease;
 }
 
+.fintrack-settings-v2-btn-clear, .fintrack-settings-v2-btn-logout {
+  color: #000;
+}
+
 .fintrack-settings-v2-btn-clear {
   background: #fff1f2;
   border: 1px solid #fee2e2;
@@ -312,4 +316,193 @@
 @keyframes modalScale {
   from { opacity: 0; transform: scale(0.9); }
   to { opacity: 1; transform: scale(1); }
+}
+
+.full-width-card {
+  grid-column: 1 / -1; /* Spans across the grid */
+}
+
+.automation-audit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: var(--space-md);
+}
+
+.automation-audit-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.automation-audit-row:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--color-accent);
+}
+
+.audit-info {
+  display: flex;
+  flex-direction: column;
+  flex: 2;
+}
+
+.audit-category {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.audit-desc {
+  font-size: 0.9rem;
+  color: var(--text-on-dark);
+}
+
+.audit-logic {
+  flex: 1;
+  text-align: right;
+  margin-right: var(--space-lg);
+}
+
+.audit-frequency {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-muted-on-dark);
+}
+
+.btn-stop-auto {
+  background: transparent;
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  color: #f43f5e;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-stop-auto:hover {
+  background: #f43f5e;
+  color: white;
+}
+
+/* --- High-End Standing Orders Ledger --- */
+
+.automation-audit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px; /* Creates thin hairline separators */
+  background: var(--bg-soft-gray); /* Border color between rows */
+  border-radius: var(--radius-pro);
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+}
+
+.ft-audit-row {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr auto;
+  align-items: center;
+  padding: 20px 24px;
+  background: var(--bg-pure-white);
+  transition: background 0.2s ease;
+}
+
+.ft-audit-row:hover {
+  background: #fdfdfd;
+}
+
+/* Info Column */
+.ft-audit-id-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ft-audit-category {
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-accent);
+}
+
+.ft-audit-description {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* Logic/Financial Column */
+.ft-audit-logic-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.ft-audit-frequency-pill {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  background: var(--bg-soft-gray);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.ft-audit-amount {
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace; /* Professional financial look */
+}
+
+.ft-audit-amount.income { color: #10b981; }
+.ft-audit-amount.expense { color: var(--text-main); }
+
+/* Action Column */
+.ft-btn-stop-protocol {
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  color: var(--text-muted);
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ft-btn-stop-protocol:hover {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+  background: #fff1f2;
+}
+
+/* Responsive Handling */
+@media (max-width: 768px) {
+  .ft-audit-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+    padding: 16px;
+  }
+  
+  .ft-audit-logic-col {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--bg-soft-gray);
+    padding-top: 12px;
+  }
+  
+  .ft-btn-stop-protocol {
+    width: 100%;
+    margin-top: 8px;
+  }
 }

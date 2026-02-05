@@ -259,39 +259,51 @@ function Dashboard() {
           </div>
         </section>
 
-        {/* SECTION 3: TRANSACTION LIST */}
+        {/* SECTION 3: TRANSACTION LIST - FULL WIDTH MASTER (Zebra White) */}
         <section className="zebra-section section-white">
           <div className="container-elegant">
-            <div className="dashboard-grid-sophisticated">
-              <div className="grid-col-main">
+            {/* NEW UNIQUE WRAPPER: Master Grid Stack */}
+            <div className="layout-master-stack">
+              {/* 1. TOP ROW: Transaction list takes full width */}
+              <div className="layout-full-width-top">
                 <h3 className="elegant-small-heading">Active Ledger</h3>
-                <TransactionList
-                  transactions={transactions}
-                  timeframe={selectedTimeframe}
-                  limit={4}
-                  onDelete={(id) =>
-                    setTransactions(transactions.filter((t) => t.id !== id))
-                  }
-                  onEdit={(updatedTx) =>
-                    setTransactions(
-                      transactions.map((t) =>
-                        t.id === updatedTx.id ? updatedTx : t,
-                      ),
-                    )
-                  }
-                />
+                <div className="grid-item-card layout-ledger-expansion">
+                  <TransactionList
+                    transactions={transactions}
+                    timeframe={selectedTimeframe}
+                    limit={6} /* Increased limit to fill the page properly */
+                    onDelete={(id) =>
+                      setTransactions(transactions.filter((t) => t.id !== id))
+                    }
+                    onEdit={(updatedTx) =>
+                      setTransactions(
+                        transactions.map((t) =>
+                          t.id === updatedTx.id ? updatedTx : t,
+                        ),
+                      )
+                    }
+                  />
+                </div>
               </div>
-              <div className="grid-col-side">
-                <div className="widget-stack">
+
+              {/* 2. BOTTOM ROW: The 2+1 Grid format */}
+              <div className="layout-widget-grid-sub">
+                <div className="grid-item-card">
                   <BudgetTracker
                     budgets={budgets}
                     transactions={transactions}
                     timeframe={selectedTimeframe}
                   />
+                </div>
+                <div className="grid-item-card">
                   <TopCategories
                     transactions={transactions}
                     timeframe={selectedTimeframe}
                   />
+                </div>
+
+                {/* The 'below one' - Spanning full width under the two above */}
+                <div className="grid-item-card layout-span-footer-widget">
                   <UpcomingBills bills={bills} onAddBill={handleAddBill} />
                 </div>
               </div>
@@ -321,7 +333,7 @@ function Dashboard() {
               <div className="grid-item-card">
                 <div
                   className="card-inner-padding"
-                  style={{ padding: "var(--space-lg)" }}
+                  // style={{ padding: "var(--space-lg)" }}
                 >
                   <TransactionForm
                     onAdd={handleAddTransaction}
@@ -335,7 +347,7 @@ function Dashboard() {
               <div className="grid-item-card">
                 <div
                   className="card-inner-padding"
-                  style={{ padding: "var(--space-lg)" }}
+                  // style={{ padding: "var(--space-lg)" }}
                 >
                   <Goals
                     goals={goals}
@@ -348,7 +360,7 @@ function Dashboard() {
               <div className="grid-item-card">
                 <div
                   className="card-inner-padding"
-                  style={{ padding: "var(--space-lg)" }}
+                  // style={{ padding: "var(--space-lg)" }}
                 >
                   <RecentActivity transactions={transactions} />
                 </div>
@@ -357,7 +369,7 @@ function Dashboard() {
               <div className="grid-item-card">
                 <div
                   className="card-inner-padding"
-                  style={{ padding: "var(--space-lg)" }}
+                  // style={{ padding: "var(--space-lg)" }}
                 >
                   <Alerts
                     balance={balance}

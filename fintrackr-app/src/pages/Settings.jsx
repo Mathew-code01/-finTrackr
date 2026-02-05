@@ -134,28 +134,32 @@ function Settings() {
                 </div>
               ) : (
                 recurringTransactions.map((tx) => (
-                  <div key={tx.id} className="automation-audit-row">
-                    <div className="audit-info">
-                      <span className="audit-category">{tx.category}</span>
-                      <span className="audit-desc">
+                  <div key={tx.id} className="ft-audit-row">
+                    <div className="ft-audit-id-col">
+                      <span className="ft-audit-category">{tx.category}</span>
+                      <h5 className="ft-audit-description">
                         {tx.description || "Untitled Protocol"}
+                      </h5>
+                    </div>
+
+                    <div className="ft-audit-logic-col">
+                      <div className="ft-audit-frequency-pill">
+                        <span>Frequency: {tx.frequency}</span>
+                      </div>
+                      <span className={`ft-audit-amount ${tx.type}`}>
+                        {tx.type === "income" ? "+" : "-"}$
+                        {tx.amount.toLocaleString()}
                       </span>
                     </div>
-                    <div className="audit-logic">
-                      <span className="audit-frequency">
-                        Frequency: {tx.frequency}
-                      </span>
-                      <span className={`audit-amount ${tx.type}`}>
-                        {tx.type === "income" ? "+" : "-"}${tx.amount}
-                      </span>
+
+                    <div className="ft-audit-action-col">
+                      <button
+                        className="ft-btn-stop-protocol"
+                        onClick={() => handleStopSingleRecurring(tx.id)}
+                      >
+                        Stop
+                      </button>
                     </div>
-                    <button
-                      className="btn-stop-auto"
-                      onClick={() => handleStopSingleRecurring(tx.id)}
-                      title="Disable Automation"
-                    >
-                      Stop
-                    </button>
                   </div>
                 ))
               )}

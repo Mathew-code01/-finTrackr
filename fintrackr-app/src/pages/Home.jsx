@@ -16,8 +16,8 @@ import "../styles/Home.css";
 function Home() {
   return (
     <div className="home-page">
-      <PublicHeader />
-
+   
+      <PublicHeader forceTheme="dark" />
       {/* --- SECTION 1: HERO (White) --- */}
       <section className="section-white hero-section">
         <div className="container">
@@ -41,7 +41,6 @@ function Home() {
           </div>
         </div>
       </section>
-
       {/* --- SECTION 2: FEATURES (Deep Obsidian) --- */}
       <section className="section-dark">
         <div className="container">
@@ -87,7 +86,6 @@ function Home() {
           </div>
         </div>
       </section>
-
       {/* --- SECTION 3: HOW IT WORKS (White) --- */}
       <section className="section-white">
         <div className="container">
@@ -120,7 +118,6 @@ function Home() {
           </div>
         </div>
       </section>
-
       {/* --- SECTION 4: TESTIMONIALS (Deep Obsidian) --- */}
       <section className="section-dark">
         <div className="container">
@@ -147,7 +144,6 @@ function Home() {
           </div>
         </div>
       </section>
-
       {/* --- SECTION 5: TRUST & SECURITY (White) --- */}
       {/* --- SECTION 5: TRUST & SECURITY (White background, Boxed Card) --- */}
       <section className="section-white security-section">
@@ -184,7 +180,6 @@ function Home() {
           </div>
         </div>
       </section>
-
       <PublicFooter />
     </div>
   );

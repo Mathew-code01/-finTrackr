@@ -9,6 +9,10 @@
   --bg-deep-obsidian: #0f172a; /* Deep Midnight Navy - Much more "Financial" */
   --bg-glass: rgba(30, 41, 59, 0.7); /* Deep Slate for Glassmorphism */
   
+     /* Indigo */
+--color-success: #10b981;    /* Emerald */
+--color-danger: #f43f5e;     /* Rose */
+
   /* Brand Accents: Electric Indigo (Trust & Growth) */
   --color-accent: #6366f1; 
   --color-accent-hover: #4f46e5;
