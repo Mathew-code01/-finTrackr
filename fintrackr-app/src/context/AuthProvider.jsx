@@ -3,17 +3,28 @@
 import React, { useState, useEffect } from "react";
 import { authService } from "../services/authService";
 import { AuthContext } from "../hooks/useAuth";
+import LoadingScreen from "../components/LoadingScreen"; // ✅ Import added
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const current = authService.getCurrentUser();
-    if (current) {
-      setUser(current);
-    }
-    setLoading(false);
+    const initAuth = async () => {
+      try {
+        const current = authService.getCurrentUser();
+        if (current) {
+          setUser(current);
+        }
+      } catch (error) {
+        console.error("Auth initialization failed", error);
+      } finally {
+        // A small delay (500ms) makes the transition feel more high-end and stable
+        setTimeout(() => setLoading(false), 500);
+      }
+    };
+
+    initAuth();
   }, []);
 
   const login = async (credentials) => {
@@ -24,7 +35,6 @@ export function AuthProvider({ children }) {
 
   const register = async (data) => {
     const newUser = await authService.register(data);
-    // after registration, you may want to log them in automatically
     return newUser;
   };
 
@@ -32,6 +42,11 @@ export function AuthProvider({ children }) {
     authService.logout();
     setUser(null);
   };
+
+  // ✅ GLOBAL LOADING CHECK: This covers all pages on initial load
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <AuthContext.Provider value={{ user, loading, login, register, logout }}>

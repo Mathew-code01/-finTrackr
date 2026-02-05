@@ -3,47 +3,133 @@
 .ft-loading-overlay {
   position: fixed;
   inset: 0;
-  background-color: var(--bg-deep-obsidian);
+  background-color: #050810; /* Slightly deeper than obsidian for pure black contrast */
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 9999;
+  overflow: hidden;
 }
 
-.ft-loading-content {
-  text-align: center;
+/* Background ambient glow - very high end */
+.ft-loading-overlay::before {
+  content: '';
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: var(--color-accent);
+  filter: blur(150px);
+  opacity: 0.15;
+  animation: ambientMove 8s infinite alternate-reverse;
+}
+
+.ft-loading-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+/* Orbiting ring around the pillars */
+.ft-loading-orbit {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.orbit-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--color-accent);
+  border-radius: 50%;
+  animation: rotate 1.5s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
 
 .ft-loading-pillars {
   display: flex;
-  align-items: flex-end;
-  gap: 6px;
-  height: 32px;
-  justify-content: center;
-  margin-bottom: var(--space-md);
+  align-items: center;
+  gap: 5px;
+  height: 24px;
 }
 
 .pillar {
-  width: 4px;
+  width: 3px;
   background: var(--color-accent);
-  border-radius: 2px;
-  animation: pillarPulse 1.2s infinite ease-in-out;
+  border-radius: 4px;
+  box-shadow: 0 0 15px var(--color-accent); /* High-end neon glow */
+  animation: financialPulse 1.4s infinite cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .p1 { height: 12px; animation-delay: 0s; }
-.p2 { height: 20px; animation-delay: 0.2s; }
-.p3 { height: 28px; animation-delay: 0.4s; }
+.p2 { height: 24px; animation-delay: 0.1s; }
+.p3 { height: 18px; animation-delay: 0.2s; }
 
-@keyframes pillarPulse {
-  0%, 100% { opacity: 0.3; transform: scaleY(1); }
-  50% { opacity: 1; transform: scaleY(1.2); }
+/* Status Bar & Typography */
+.ft-loading-meta {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .ft-loading-text {
-  color: var(--text-on-dark);
-  font-size: 0.75rem;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.4em; /* Ultra-wide spacing for luxury feel */
+  margin-bottom: 12px;
+  opacity: 0.9;
+}
+
+.ft-loading-status-bar {
+  width: 140px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.status-progress {
+  height: 100%;
+  width: 40%;
+  background: var(--color-accent);
+  animation: progressMove 2s infinite ease-in-out;
+}
+
+.ft-loading-subtext {
+  font-size: 10px;
+  color: var(--text-muted-on-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
   font-weight: 500;
-  opacity: 0.8;
+}
+
+/* Animations */
+@keyframes financialPulse {
+  0%, 100% { transform: scaleY(1); opacity: 0.5; }
+  50% { transform: scaleY(1.4); opacity: 1; }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes progressMove {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(150%); }
+  100% { transform: translateX(-100%); }
+}
+
+@keyframes ambientMove {
+  from { transform: translate(-20%, -20%); }
+  to { transform: translate(20%, 20%); }
 }
