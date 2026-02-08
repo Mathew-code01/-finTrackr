@@ -74,7 +74,7 @@ function AppHeader({
         </div>
       </div>
 
-      <div className="header-center hide-on-tablet">
+      <div className="header-center">
         <div className="timeframe-group">
           {timeframes.map((tf) => {
             const lower = tf.toLowerCase();
@@ -109,23 +109,33 @@ function AppHeader({
 
             {notifOpen && (
               <div className="notif-panel glass-panel">
-                <div className="panel-header">System Alerts</div>
-                <div className="panel-body">
-                  {notifications.length > 0 ? (
-                    notifications.map((n) => (
-                      <div key={n.id} className="notif-item">
-                        {n.message}
-                      </div>
-                    ))
-                  ) : (
-                    <div className="empty-state">Secure. No new alerts.</div>
+                <div className="panel-header">
+                  <span className="eyebrow">System Alerts</span>
+                  {notifications.length > 0 && (
+                    <button
+                      className="clear-all-btn"
+                      onClick={clearNotifications}
+                    >
+                      Clear All
+                    </button>
                   )}
                 </div>
-                {notifications.length > 0 && (
-                  <button className="clear-all" onClick={clearNotifications}>
-                    Clear All
-                  </button>
-                )}
+                <div className="panel-body">
+                  {notifications.length > 0 ? (
+                    <div className="notif-list">
+                      {notifications.map((n) => (
+                        <div key={n.id} className="notif-item">
+                          <div className="notif-indicator"></div>
+                          <p className="notif-message">{n.message}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="empty-state">
+                      <p>Secure. No new alerts.</p>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>

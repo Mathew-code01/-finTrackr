@@ -4,7 +4,7 @@
 // src/pages/Dashboard.jsx
 // src/pages/Dashboard.jsx
 // src/pages/Dashboard.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, } from "react";
 import { FiArrowUp, FiArrowDown, FiDollarSign } from "react-icons/fi";
 
 // Components
@@ -36,6 +36,7 @@ import STORAGE_KEYS, {
 import "../styles/Dashboard.css";
 
 function Dashboard() {
+  // --- STATE INITIALIZATION ---
   const [transactions, setTransactions] = useState(() =>
     getFromStorage(STORAGE_KEYS.TRANSACTIONS, []),
   );
@@ -51,10 +52,11 @@ function Dashboard() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedTimeframe, setSelectedTimeframe] = useState("monthly");
-  const [activeChart, setActiveChart] = useState("pie"); // State is now used below!
+  const [activeChart, setActiveChart] = useState("pie");
 
   const { addNotification } = useNotifications();
 
+  // --- PERSISTENCE LAYER ---
   useEffect(() => {
     saveToStorage(STORAGE_KEYS.TRANSACTIONS, transactions);
     saveToStorage(STORAGE_KEYS.GOALS, goals);
@@ -62,17 +64,93 @@ function Dashboard() {
     saveToStorage(STORAGE_KEYS.BUDGETS, budgets);
   }, [transactions, goals, bills, budgets]);
 
+  // --- FINANCIAL CALCULATIONS ---
   const incomeTotal = transactions
-    .filter((t) => t.type === "income")
-    .reduce((sum, t) => sum + t.amount, 0);
+    .filter(
+      (t) =>
+        t.type?.toLowerCase().includes("income") ||
+        t.type?.toLowerCase().includes("credit"),
+    )
+    .reduce((sum, t) => sum + Number(t.amount || 0), 0);
+
   const expenseTotal = transactions
-    .filter((t) => t.type === "expense")
-    .reduce((sum, t) => sum + t.amount, 0);
+    .filter(
+      (t) =>
+        t.type?.toLowerCase().includes("expense") ||
+        t.type?.toLowerCase().includes("debit"),
+    )
+    .reduce((sum, t) => sum + Number(t.amount || 0), 0);
+
   const balance = incomeTotal - expenseTotal;
 
+  // --- UPDATED AUTOMATION ENGINE (DASHBOARD.JSX) ---
+  useEffect(() => {
+    const processAutomations = () => {
+      // 1. Define "Today" clearly in local time
+      const now = new Date();
+      const todayStr = now.toLocaleDateString("en-CA"); // Gets YYYY-MM-DD
+      const todayTime = new Date(todayStr).getTime();
+
+      const recurringTemplates = transactions.filter((t) => t.recurring);
+      let newEntries = [];
+
+      recurringTemplates.forEach((template) => {
+        // Start from the template date
+        let runner = new Date(template.date);
+
+        const incrementDate = (date) => {
+          const d = new Date(date);
+          if (template.frequency === "daily") d.setDate(d.getDate() + 1);
+          else if (template.frequency === "weekly") d.setDate(d.getDate() + 7);
+          else if (template.frequency === "monthly")
+            d.setMonth(d.getMonth() + 1);
+          return d;
+        };
+
+        // Move to the first scheduled occurrence
+        runner = incrementDate(runner);
+
+        // 2. Loop until the runner surpasses today's timestamp
+        while (runner.getTime() <= todayTime) {
+          const dateStr = runner.toLocaleDateString("en-CA");
+          const occurrenceId = `auto-${template.id}-${dateStr}`;
+
+          // 3. Strict check for existence to prevent those Feb 7 duplicates
+          const exists = transactions.some((t) => t.id === occurrenceId);
+
+          if (!exists) {
+            newEntries.push({
+              ...template,
+              id: occurrenceId,
+              date: dateStr,
+              recurring: false,
+              status: "Automated Standing Order",
+            });
+          }
+
+          runner = incrementDate(runner);
+
+          // Safety break to prevent infinite loops if frequency is undefined
+          if (!template.frequency) break;
+        }
+      });
+
+      if (newEntries.length > 0) {
+        setTransactions((prev) => [...newEntries, ...prev]);
+        addNotification(
+          `${newEntries.length} Strategic movements synchronized.`,
+        );
+      }
+    };
+
+    processAutomations();
+    // We add transactions.length as a dependency so it checks when things change
+  }, [transactions.length, addNotification]);
+
+  // --- HANDLERS ---
   const handleAddTransaction = (tx) => {
-    setTransactions([tx, ...transactions]);
-    addNotification("Ledger Updated Successfully ✅");
+    setTransactions((prev) => [tx, ...prev]);
+    addNotification("Ledger Updated ✅");
   };
 
   const handleAddGoal = (goal) => {
@@ -84,59 +162,6 @@ function Dashboard() {
     setBills([...bills, bill]);
     addNotification("Payment Obligation Noted 📅");
   };
-
-  // --- NEW: AUTOMATION ENGINE ---
-  useEffect(() => {
-    const processAutomations = () => {
-      const lastRun = getFromStorage(
-        "LAST_AUTOMATION_RUN",
-        new Date().toISOString(),
-      );
-      const today = new Date();
-      const lastRunDate = new Date(lastRun);
-
-      // Check if at least one day has passed
-      if (today.toDateString() !== lastRunDate.toDateString()) {
-        const recurringTx = transactions.filter((t) => t.recurring);
-        let newEntries = [];
-
-        recurringTx.forEach((baseTx) => {
-          // Logic to check if a new entry is needed based on frequency
-          // This is a simplified version for 'Daily'
-          if (baseTx.frequency === "daily") {
-            // Calculate how many days missed
-            const diffTime = Math.abs(today - lastRunDate);
-            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-            for (let i = 1; i <= diffDays; i++) {
-              const newDate = new Date(lastRunDate);
-              newDate.setDate(newDate.getDate() + i);
-
-              newEntries.push({
-                ...baseTx,
-                id: Date.now() + Math.random(),
-                date: newDate.toISOString().split("T")[0],
-                status: "Automated Standing Order",
-              });
-            }
-          }
-          // Note: Weekly/Monthly logic follows the same date-diff pattern
-        });
-
-        if (newEntries.length > 0) {
-          setTransactions((prev) => [...newEntries, ...prev]);
-          addNotification(
-            `${newEntries.length} Automated Ledger entries processed.`,
-          );
-        }
-
-        // Update the last run marker
-        saveToStorage("LAST_AUTOMATION_RUN", today.toISOString());
-      }
-    };
-
-    processAutomations();
-  }, []);
 
   return (
     <div className="dashboard-page">
@@ -150,7 +175,7 @@ function Dashboard() {
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <main className="dashboard-main">
-        {/* SECTION 1: SUMMARY */}
+        {/* SECTION 1: SUMMARY (White) */}
         <section className="zebra-section section-white">
           <div className="container-elegant">
             <header className="hero-centered">
@@ -184,26 +209,16 @@ function Dashboard() {
           </div>
         </section>
 
-        {/* SECTION 2: CHARTS (Responsive Grid) */}
+        {/* SECTION 2: CHARTS (Dark) */}
         <section className="zebra-section section-dark">
           <div className="container-elegant">
-            <div
-              className="section-header-row"
-              style={{
-                marginBottom: "2rem",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "flex-end",
-              }}
-            >
+            <div className="section-header-row">
               <h2
                 className="elegant-heading-sm"
                 style={{ color: "var(--text-on-dark)" }}
               >
                 Analytics Suite
               </h2>
-
-              {/* USES setActiveChart: Navigation for mobile users */}
               <div className="filter-pill-group">
                 {["pie", "bar", "line", "area"].map((type) => (
                   <button
@@ -218,7 +233,6 @@ function Dashboard() {
             </div>
 
             <div className="two-column-grid">
-              {/* USES activeChart: 'is-active' class controls visibility via CSS */}
               <div
                 className={`chart-wrapper ${activeChart === "pie" ? "is-active" : ""}`}
               >
@@ -259,19 +273,17 @@ function Dashboard() {
           </div>
         </section>
 
-        {/* SECTION 3: TRANSACTION LIST - FULL WIDTH MASTER (Zebra White) */}
+        {/* SECTION 3: TRANSACTION LIST (White) */}
         <section className="zebra-section section-white">
           <div className="container-elegant">
-            {/* NEW UNIQUE WRAPPER: Master Grid Stack */}
             <div className="layout-master-stack">
-              {/* 1. TOP ROW: Transaction list takes full width */}
               <div className="layout-full-width-top">
                 <h3 className="elegant-small-heading">Active Ledger</h3>
                 <div className="grid-item-card layout-ledger-expansion">
                   <TransactionList
                     transactions={transactions}
                     timeframe={selectedTimeframe}
-                    limit={6} /* Increased limit to fill the page properly */
+                    limit={8}
                     onDelete={(id) =>
                       setTransactions(transactions.filter((t) => t.id !== id))
                     }
@@ -286,7 +298,6 @@ function Dashboard() {
                 </div>
               </div>
 
-              {/* 2. BOTTOM ROW: The 2+1 Grid format */}
               <div className="layout-widget-grid-sub">
                 <div className="grid-item-card">
                   <BudgetTracker
@@ -301,8 +312,6 @@ function Dashboard() {
                     timeframe={selectedTimeframe}
                   />
                 </div>
-
-                {/* The 'below one' - Spanning full width under the two above */}
                 <div className="grid-item-card layout-span-footer-widget">
                   <UpcomingBills bills={bills} onAddBill={handleAddBill} />
                 </div>
@@ -311,84 +320,57 @@ function Dashboard() {
           </div>
         </section>
 
-        {/* SECTION 4: ACTIONS & WIDGETS */}
+        {/* SECTION 4: ACTIONS (Dark) */}
         <section className="zebra-section section-dark">
           <div className="container-elegant">
-            {/* Clean, adaptive header replacing inline styles */}
             <div className="section-header-adaptive">
-              <div>
-                <span className="eyebrow-dark">Data Input</span>
-                <h2
-                  className="elegant-heading-sm"
-                  style={{ color: "var(--text-on-dark)", marginBottom: 0 }}
-                >
-                  Asset Entry
-                </h2>
-              </div>
-              {/* Optional: Add a 'last updated' or status indicator here for desktop */}
+              <span className="eyebrow-dark">Data Input</span>
+              <h2
+                className="elegant-heading-sm"
+                style={{ color: "var(--text-on-dark)", marginBottom: "2rem" }}
+              >
+                Asset Entry
+              </h2>
             </div>
 
-            {/* The grid now respects the stacking logic in your CSS */}
             <div className="two-column-grid">
               <div className="grid-item-card">
-                <div
-                  className="card-inner-padding"
-                  // style={{ padding: "var(--space-lg)" }}
-                >
-                  <TransactionForm
-                    onAdd={handleAddTransaction}
-                    goals={goals}
-                    budgets={budgets}
-                    onSaveBudgets={setBudgets}
-                  />
-                </div>
+                <TransactionForm
+                  onAdd={handleAddTransaction}
+                  goals={goals}
+                  budgets={budgets}
+                  onSaveBudgets={setBudgets}
+                />
               </div>
-
               <div className="grid-item-card">
+                <Goals
+                  goals={goals}
+                  transactions={transactions}
+                  onAddGoal={handleAddGoal}
+                />
+              </div>
+              <div className="grid-item-card">
+                <RecentActivity transactions={transactions} />
+              </div>
+              <div className="grid-item-card">
+                <Alerts
+                  balance={balance}
+                  budgets={budgets}
+                  transactions={transactions}
+                  timeframe={selectedTimeframe}
+                />
                 <div
-                  className="card-inner-padding"
-                  // style={{ padding: "var(--space-lg)" }}
+                  className="export-container"
+                  style={{
+                    marginTop: "2.5rem",
+                    borderTop: "1px solid rgba(255,255,255,0.05)",
+                    paddingTop: "1.5rem",
+                  }}
                 >
-                  <Goals
-                    goals={goals}
+                  <ExportData
                     transactions={transactions}
-                    onAddGoal={handleAddGoal}
+                    onImport={setTransactions}
                   />
-                </div>
-              </div>
-
-              <div className="grid-item-card">
-                <div
-                  className="card-inner-padding"
-                  // style={{ padding: "var(--space-lg)" }}
-                >
-                  <RecentActivity transactions={transactions} />
-                </div>
-              </div>
-
-              <div className="grid-item-card">
-                <div
-                  className="card-inner-padding"
-                  // style={{ padding: "var(--space-lg)" }}
-                >
-                  <Alerts
-                    balance={balance}
-                    budgets={budgets}
-                    transactions={transactions}
-                    timeframe={selectedTimeframe}
-                  />
-                  <div
-                    style={{
-                      marginTop: "2.5rem",
-                      borderTop: "1px solid rgba(255,255,255,0.05)",
-                      paddingTop: "1.5rem",
-                    }}
-                  >
-                    <ExportData
-                      transactions={transactions}
-                      onImport={setTransactions}
-                    />
-                  </div>
                 </div>
               </div>
             </div>

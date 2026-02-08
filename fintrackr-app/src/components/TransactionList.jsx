@@ -94,10 +94,14 @@ function TransactionList({ transactions, timeframe, onDelete, onEdit, limit }) {
                   <td data-label="Description" className="tx-description">
                     <div className="tx-desc-stack">
                       {tx.description || "Untitled Entry"}
-                      {/* NEW: AUTOMATION BADGE */}
-                      {tx.recurring && (
+
+                      {/* Show badge if it's the template OR if it's a generated instance */}
+                      {(tx.recurring ||
+                        tx.status === "Automated Standing Order") && (
                         <span className="auto-status-badge">
-                          Automated {tx.frequency}
+                          {tx.recurring
+                            ? `Scheduled ${tx.frequency}`
+                            : "Automated Instance"}
                         </span>
                       )}
                     </div>

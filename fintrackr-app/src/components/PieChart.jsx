@@ -1,6 +1,9 @@
 // src/components/PieChart.jsx
 // src/components/PieChart.jsx
 // src/components/PieChart.jsx
+// src/components/PieChart.jsx
+// src/components/PieChart.jsx
+// src/components/PieChart.jsx
 import React, { useMemo } from "react";
 import {
   PieChart as RePieChart,
@@ -18,8 +21,8 @@ const CustomTooltip = ({ active, payload }) => {
       <div
         style={{
           background: "var(--bg-glass)",
-          backdropFilter: "var(--glass-blur)",
-          WebkitBackdropFilter: "var(--glass-blur)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
           padding: "16px",
           border: "var(--border-on-dark)",
           borderRadius: "var(--radius-pro)",
@@ -33,7 +36,7 @@ const CustomTooltip = ({ active, payload }) => {
           fontSize: "0.7rem", 
           textTransform: 'uppercase', 
           color: 'var(--text-muted-on-dark)', 
-          letterSpacing: '0.1em' 
+          letterSpacing: '0.15em' 
         }}>
           {payload[0].name}
         </p>
@@ -43,7 +46,7 @@ const CustomTooltip = ({ active, payload }) => {
           fontWeight: 800, 
           fontSize: "1.1rem" 
         }}>
-          ${payload[0].value.toLocaleString()}
+          ${Number(payload[0].value).toLocaleString()}
         </p>
       </div>
     );
@@ -55,38 +58,58 @@ function PieChart({ transactions, timeframe }) {
   const data = useMemo(() => {
     const now = new Date();
     
-    // 1. Filter by Timeframe
+    // Unified Filter logic consistent with Bar/Line/Area charts
     const filtered = transactions.filter((t) => {
       const txDate = new Date(t.date);
-      if (timeframe === "daily")
+      const isExpense = t.type?.toLowerCase().includes("expense") || t.type?.toLowerCase().includes("debit");
+      
+      if (!isExpense) return false;
+
+      // Daily: Only today
+      if (timeframe === "daily") {
         return txDate.toDateString() === now.toDateString();
-      if (timeframe === "monthly")
-        return (
-          txDate.getMonth() === now.getMonth() &&
-          txDate.getFullYear() === now.getFullYear()
-        );
-      if (timeframe === "yearly")
+      }
+      
+      // Weekly: Only this current month's distribution
+      if (timeframe === "weekly") {
+        return txDate.getMonth() === now.getMonth() && txDate.getFullYear() === now.getFullYear();
+      }
+
+      // Monthly: Distribution across the full current year
+      if (timeframe === "monthly") {
         return txDate.getFullYear() === now.getFullYear();
+      }
+        
+      // Yearly: All-time expense distribution
+      if (timeframe === "yearly") {
+        return true; 
+      }
+        
       return true;
     });
 
-    // 2. Aggregate by Category
-    return filtered.reduce((acc, t) => {
-      const existing = acc.find((item) => item.name === t.category);
-      if (existing) existing.value += t.amount;
-      else acc.push({ name: t.category, value: t.amount });
+    // Aggregate by Category
+    const aggregated = filtered.reduce((acc, t) => {
+      const categoryName = t.category || "Uncategorized";
+      const existing = acc.find((item) => item.name === categoryName);
+      if (existing) {
+        existing.value += Number(t.amount);
+      } else {
+        acc.push({ name: categoryName, value: Number(t.amount) });
+      }
       return acc;
     }, []);
+
+    return aggregated.sort((a, b) => b.value - a.value);
   }, [transactions, timeframe]);
 
-  // High-vibrancy palette for dark mode visibility
   const COLORS = [
-    "var(--color-accent)",  // Electric Indigo
-    "var(--color-success)", // Emerald
-    "#06b6d4",              // Cyan
-    "#f59e0b",              // Amber
-    "#ec4899",              // Pink
-    "#8b5cf6",              // Violet
+    "var(--color-accent)", 
+    "var(--color-success)", 
+    "#06b6d4",                
+    "#f59e0b",                
+    "#ec4899",                
+    "#8b5cf6",                
   ];
 
   const hasData = data.length > 0;
@@ -94,8 +117,8 @@ function PieChart({ transactions, timeframe }) {
   return (
     <div style={{ width: "100%", height: 350, display: "flex", alignItems: "center", justifyContent: "center" }}>
       {!hasData ? (
-        <div style={{ textAlign: "center", opacity: 0.8 }}>
-          <div style={{ opacity: 0.2, marginBottom: "16px" }}>
+        <div style={{ textAlign: "center" }}>
+          <div style={{ opacity: 0.2, marginBottom: "16px", display: "flex", justifyContent: "center" }}>
             <FiDollarSign size={48} color="var(--text-on-dark)" />
           </div>
           <p style={{
@@ -105,7 +128,7 @@ function PieChart({ transactions, timeframe }) {
             color: "var(--text-muted-on-dark)",
             fontWeight: 700,
           }}>
-            Awaiting Financial Data
+            Awaiting Expense Data
           </p>
         </div>
       ) : (
@@ -118,11 +141,11 @@ function PieChart({ transactions, timeframe }) {
               cx="50%"
               cy="45%"
               outerRadius={100}
-              innerRadius={75}     // Modern donut style
-              paddingAngle={8}      // Visible segmentation
-              cornerRadius={10}     // Rounded segments
-              stroke="none"         // Removes "beginner" borders
-              style={{ filter: "drop-shadow(0px 4px 12px rgba(0,0,0,0.4))" }}
+              innerRadius={75}
+              paddingAngle={8}
+              cornerRadius={10}
+              stroke="none"
+              style={{ filter: "drop-shadow(0px 10px 20px rgba(0,0,0,0.3))", outline: 'none' }}
             >
               {data.map((entry, index) => (
                 <Cell 
@@ -136,14 +159,14 @@ function PieChart({ transactions, timeframe }) {
             <Legend
               verticalAlign="bottom"
               iconType="circle"
-              iconSize={8}
+              iconSize={6}
               wrapperStyle={{ 
                 paddingTop: "24px",
                 color: "var(--text-on-dark)", 
-                fontSize: "11px",
+                fontSize: "10px",
                 textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-                fontWeight: 600
+                letterSpacing: '0.1em',
+                fontWeight: 700
               }}
             />
           </RePieChart>

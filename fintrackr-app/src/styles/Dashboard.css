@@ -436,3 +436,7 @@
 .layout-full-width-top .elegant-small-heading {
   margin-bottom: var(--space-md);
 }
+
+.section-header-row{
+  margin-bottom: 30px
+}
